@@ -200,6 +200,8 @@ wk.prop.sum<-ddply(subset(df.wk.summary,Rank!="Low"), c("Week","Species"), summa
 wk.prop.by.species = cast(wk.prop.sum, Week~Species,value="Mean.Wk.Prop") 
 wk.prop.by.species[is.na(wk.prop.by.species)] = 0 
 head(wk.prop.by.species)
+saveRDS(df.wk.summary, file = "TW_Fishway_WeeklySummary_by_Species_18June2025.rds")
+
 
 ## SAVE and EXPORT
 #write.csv(wk.prop.by.species,file="Fishway_MeanCumulativeCatch_by_Species_23May2025.csv")
