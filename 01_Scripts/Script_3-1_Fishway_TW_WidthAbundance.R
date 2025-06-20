@@ -90,6 +90,12 @@ df.d.plot.a.01.window$Window<-as.numeric(df.d.plot.a.01.window$Tracking.Window +
 
 df.c<-merge(df.d.plot.a.01.window,year.sum,by=c("Species","Year"))
 df.c$logCatch<-log10(df.c$TotalCatch)
+df.c$fSpecies<-as.factor(df.c$Species)
+df.c$nTotalCatch<-as.numeric(df.c$TotalCatch)
+df.c$fYear<-as.factor(df.c$Year)
+#saveRDS(df.c, file = "TW_Fishway_Window_Catch_19June2025.rds")
+
+
 plot(Window~logCatch,data=df.c)
 lm1<-lm(Window~logCatch,data=df.c)
 #lm1<-glm(TotalCatch~Window*Species,data=df.c)
@@ -124,6 +130,16 @@ p
 
 
 
+
+# Calculate the mean and standard error
+l.model <- lm(Day.Sum ~ 1, subset(df.b,Species=="Bowfin"))
+plot(Day.Sum ~ Year, subset(df.b,Species=="Bowfin"))
+abline(l.model)
+# Calculate the confidence interval
+confint(l.model, level=0.95)
+plot_model(m1.2, type = "re")
+ranef_data.2 <- ranef(m1.2, condVar = TRUE)
+dotplot(ranef_data.2, scales = list(x = list(relation = "free")))
 
 
 
@@ -229,40 +245,6 @@ summary(lm.perch)
 
 
 
-
-
-
-
-
-# Calculate the mean and standard error
-l.model <- lm(Day.Sum ~ 1, subset(df.b,Species=="Bowfin"))
-plot(Day.Sum ~ Year, subset(df.b,Species=="Bowfin"))
-abline(l.model)
-# Calculate the confidence interval
-confint(l.model, level=0.95)
-
-
-#########
-## df.wk.plot
-df.sub <- subset(df.wk.plot,Prop.Year>=0.05)
-#df.sub <- subset(df.wk.plot,Prop.Year>=0.01)
-
-df.d<-data.frame(time.wk.window(df.sub))
-df.d$Window<-as.numeric(df.d$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
-df.d<-plyr::rename(df.d,c("fYear"="Year"))
-df.e<-merge(df.d,year.sum,by=c("Species","Year"))
-df.e$logCatch<-log10(df.e$TotalCatch+1)
-df.f<-merge(df.e,sum.species,by=c("Species"))
-df.g<-subset(df.f,Rank=="High")
-
-p <- ggplot(data=df.g,aes(x=logCatch,y=Window,color=Species))
-p <- p +  labs(y= "Capture Window (weeks)", x = "log10(Annual Total Catch)")
-p <- p + theme_bw(base_size = 20) 
-p <- p + geom_point()
-p <- p + xlim(0,5)
-#p <- p + ylim(0,25)
-#p <- p + geom_line(data = my.model, aes(x = logCatch, y = Window), colour = "tomato",lwd=2)
-p 
 
 
 
