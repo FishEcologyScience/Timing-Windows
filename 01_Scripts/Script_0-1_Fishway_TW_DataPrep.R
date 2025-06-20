@@ -62,6 +62,7 @@ df.days$Day <- yday(df.days$Date) # make this into a date object
 df.days$fYear <- as.factor(df.days$Year)
 df.days$holder <- 1
 
+## effort plot - FIGURE 1
 p <- ggplot(df.days, aes(Day, fYear)) 
 p <- p + theme_bw(base_size = 20) 
 p <- p + theme(axis.title = element_text(face = "bold"),legend.position="none")  

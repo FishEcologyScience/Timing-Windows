@@ -18,6 +18,7 @@ library(ggeffects)
 ## load data
 df <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_Window_Catch_19June2025.rds")
 head(df) ## base dataset
+setwd("~/github/Timing-Windows/03_Output/")
 
 m1<-lmer(Window ~ logCatch + (1 | fSpecies) ,data=df, REML=T) # only random intercept by species
 summary(m1) ## p<0.0001
@@ -29,22 +30,37 @@ plot(m1.2)
 
 ## plot overall fixed effect
 pred <- ggpredict(m1.2, terms = "logCatch") ## fixed effect
-ggplot(pred, aes(x = x, y = predicted)) + 
+p1<-ggplot(pred, aes(x = x, y = predicted)) + 
   geom_line(color = "blue") +
   geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2) +
-  labs(x = "log10(Annual Total Catch)", y = "Predicted Capture Window (weeks)") +
+  labs(x = "log10(Annual Total Catch)", y = "Capture Duration (days)") +
   theme_bw(base_size = 20) 
+p1
+png("Window_By_TotalCatch_GLMM_FixedEffect.png",
+    width = 2000, height = 2000,units="px",res=300)
+p1
+dev.off()
 
 ## overall effect
 df <- df %>%mutate(predicted = predict(m1.2))
-ggplot(df, aes(x = logCatch, y = Window, color = fSpecies)) +
+p2<-ggplot(df, aes(x = logCatch, y = Window, color = fSpecies)) +
   theme_bw(base_size = 20) + 
   geom_point(alpha = 0.6) +
   geom_line(aes(y = predicted, group = fSpecies), size = 1) +
-  labs(y= "Capture Window (weeks)", x = "log10(Annual Total Catch)",color="Species")
+  labs(y= "Capture Duration (days)", x = "log10(Annual Total Catch)",color="Species")
+p2
+png("Window_By_TotalCatch_GLMM_MainPlot.png",
+    width = 2800, height = 2000,units="px",res=300)
+p2
+dev.off()
 
 # random effects
 ranef_data <- ranef(m1.2, condVar = TRUE)
-dotplot(ranef_data, scales = list(x = list(relation = "free")))
+p3<-dotplot(ranef_data, scales = list(x = list(relation = "free")))
+p3
+png("Window_By_TotalCatch_GLMM_RandomSlopeIntercept.png",
+    width = 2000, height = 2000,units="px",res=300)
+p3
+dev.off()
 
 
