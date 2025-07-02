@@ -20,8 +20,8 @@ library(lubridate)
 library(reshape)
 library(data.table)
 library(lattice)
-library(rgdal)
-library(rgeos)
+#library(rgdal) depreciated
+#library(rgeos)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
@@ -31,10 +31,11 @@ library(reshape2)
 #################
 ## Import Data ##
 #################
-setwd("~/github/Timing-Windows/02_Data/")
+#setwd("~/github/Timing-Windows/02_Data/")
+#setwd("~/04 - R Working Directory/03 - GitHub Desktop/Timing-Windows/02_Data")
 
 # base Fishway dataset - includes data up to 2022
-df <- read.csv("~/github/Timing-Windows/02_Data/RBG_Barrier Data_1996-2022.csv")
+df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv")
 df$YMD <- dmy(df$Date) # make this into a date object
 df$Year <- year(df$YMD) # make this into a date object
 df$Day <- yday(df$YMD) # make this into a date object
@@ -66,14 +67,17 @@ df.days$holder <- 1
 p <- ggplot(df.days, aes(Day, fYear)) 
 p <- p + theme_bw(base_size = 20) 
 p <- p + theme(axis.title = element_text(face = "bold"),legend.position="none")  
-p <- p + geom_point(aes(size = holder)) #, shape=15, size=4, position=pd,color="black"
+p <- p + geom_point() #, shape=15, size=4, position=pd,color="black"
 p <- p + labs(y= "Year", x = "Day of Year") 
-p <- p + ggtitle("Cootes Paradise Fishway - Lift Days") 
-p <- p + geom_vline(xintercept=74, linetype="dashed",colour="blue", linewidth=2)
-p <- p + geom_vline(xintercept=151, linetype="dashed",colour="blue", linewidth=2)
-p <- p + geom_vline(xintercept=121, linetype="dotdash",colour="red", linewidth=2)
-p <- p + geom_vline(xintercept=196, linetype="dotdash",colour="red", linewidth=2)
+p <- p + ggtitle("Cootes Paradise Fishway - Lift Days")
+p <- p + geom_vline(xintercept=74, linetype="dashed", colour="blue", linewidth=2)
+p <- p + geom_vline(xintercept=151, linetype="dashed", colour="blue", linewidth=2)
+p <- p + geom_vline(xintercept=121, linetype="dotdash", colour="red", linewidth=2)
+p <- p + geom_vline(xintercept=196, linetype="dotdash", colour="red", linewidth=2)
 p <- p + scale_y_discrete(limits=rev)
+#Add rectangles for timing windows
+p <- p + annotate("rect", xmin = 74, xmax = 151, ymin = -Inf, ymax = Inf, alpha=0.2, fill="blue")
+p <- p + annotate("rect", xmin = 121, xmax = 196, ymin = -Inf, ymax = Inf, alpha=0.2, fill="red") 
 #p <- p + geom_vline(xintercept=243, linetype="solid",colour="yellow", size=2)
 #p <- p + geom_vline(xintercept=50, linetype="solid",colour="yellow", size=2)
 p
