@@ -27,7 +27,7 @@ library(ggeffects)
 library(performance)
 
 ## import required datasets
-df.wk.summary <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklySummary_by_Species_18June2025.rds")
+df.wk.summary <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
 setwd("~/github/Timing-Windows/03_Output/")
 
 ## remove years with zero catch
@@ -52,7 +52,7 @@ wk.cumul.prop<-ddply(subset(df.cumul.prop,Rank!="Low"), c("Week","Species"), sum
                    Min.Wk.Prop = min(cumul.prop,na.rm=T)) #
 wk.cumul.by.species = cast(wk.cumul.prop, Week~Species,value="Mean.Wk.Prop") 
 wk.cumul.by.species[is.na(wk.cumul.by.species)] = 0 
-#write.csv(wk.cumul.by.species,file="Mean_Weekly_Cumulative_PropCatch_19June2025.csv")
+#write.csv(wk.cumul.by.species,file="Mean_Weekly_Cumulative_PropCatch_03July025.csv")
 # Table 3 #
 
 ## break out by how common species are
@@ -70,6 +70,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=1)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=1)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=1)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + scale_y_continuous(limits = c(0,1))
 #p <- p + facet_wrap(~ Species)
 p 
@@ -101,6 +103,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.pike, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -111,109 +115,10 @@ p <- p + geom_line(data=new.pike,
 #p <- p + geom_smooth(data=df.pike,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_NorthernPike_26June2025.png",
+png("Fishway_CumulProp_NorthernPike_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
-
-
-#### mixed model - Bigmouth Buffalo 
-df.buff<-subset(df.mod,fSpecies=="Bigmouth Buffalo")
-m1.buff <- glmer(cbind(cumul.catch, Year.Sum - cumul.catch) ~ Week + (1 | fYear), 
-                 data = df.buff, 
-                 family = binomial)
-summary(m1.buff) ##
-r2(m1.buff)
-
-new.buff <- expand.grid(Week = unique(df.buff$Week), fYear = unique(df.buff$fYear))
-new.buff$predicted_prob <- predict(m1.buff, new.buff, type = "response", re.form = NA) # use re.form = NULL if including random effects
-
-p <- ggplot()
-p <- p + labs(y= "Cumulative Prop. Annual Total Catch", x = "Week",title="Bigmouth Buffalo")
-p <- p + theme_bw(base_size = 20) 
-p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth=2)
-p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
-p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p + geom_jitter(data = df.buff, 
-                     aes(x = Week, y = cumul.prop), 
-                     width = 0.2, height = 0.02, alpha = 0.3)
-p <- p + geom_line(data=new.buff, 
-                   aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
-p <- p + geom_line(data=new.buff, 
-                   aes(x = Week, y = predicted_prob.2),colour="darkorange",linewidth=2)
-#p <- p + geom_smooth(data=df.buff,aes(x=Week,y=cumul.prop))
-p 
-
-png("Fishway_CumulProp_BigmouthBuffalo_26June2025.png",
-    width = 2400, height = 2400,units="px",res=300)
-p
-dev.off()
-
-
-#### mixed model - Black Bullhead
-df.blbull<-subset(df.mod,fSpecies=="Black Bullhead")
-m1.blbull <- glmer(cbind(cumul.catch, Year.Sum - cumul.catch) ~ Week + (1 | fYear), 
-                 data = df.blbull, 
-                 family = binomial)
-summary(m1.blbull) ##
-r2(m1.blbull)
-
-new.blbull <- expand.grid(Week = unique(df.blbull$Week), fYear = unique(df.blbull$fYear))
-new.blbull$predicted_prob <- predict(m1.blbull, new.blbull, type = "response", re.form = NA) # use re.form = NULL if including random effects
-
-p <- ggplot()
-p <- p + labs(y= "Cumulative Prop. Annual Total Catch", x = "Week",title="Black Bullhead")
-p <- p + theme_bw(base_size = 20) 
-p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth=2)
-p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
-p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p + geom_jitter(data = df.blbull, 
-                     aes(x = Week, y = cumul.prop), 
-                     width = 0.2, height = 0.02, alpha = 0.3)
-p <- p + geom_line(data=new.blbull, 
-                   aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
-#p <- p + geom_smooth(data=df.blbull,aes(x=Week,y=cumul.prop))
-p 
-
-png("Fishway_CumulProp_BlackBullhead_26June2025.png",
-    width = 2400, height = 2400,units="px",res=300)
-p
-dev.off()
-
-
-#### mixed model - Black Crappie
-df.blcrap<-subset(df.mod,fSpecies=="Black Crappie")
-m1.blcrap <- glmer(cbind(cumul.catch, Year.Sum - cumul.catch) ~ Week + (1 | fYear), 
-                   data = df.blcrap, 
-                   family = binomial)
-summary(m1.blcrap) ##
-r2(m1.blcrap)
-
-new.blcrap <- expand.grid(Week = unique(df.blcrap$Week), fYear = unique(df.blcrap$fYear))
-new.blcrap$predicted_prob <- predict(m1.blcrap, new.blcrap, type = "response", re.form = NA) # use re.form = NULL if including random effects
-
-p <- ggplot()
-p <- p + labs(y= "Cumulative Prop. Annual Total Catch", x = "Week",title="Black Crappie")
-p <- p + theme_bw(base_size = 20) 
-p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth=2)
-p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
-p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p + geom_jitter(data = df.blcrap, 
-                     aes(x = Week, y = cumul.prop), 
-                     width = 0.2, height = 0.02, alpha = 0.3)
-p <- p + geom_line(data=new.blcrap, 
-                   aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
-#p <- p + geom_smooth(data=df.blcrap,aes(x=Week,y=cumul.prop))
-p 
-
-png("Fishway_CumulProp_BlackCrappie_26June2025.png",
-    width = 2400, height = 2400,units="px",res=300)
-p
-dev.off()
-
 
 #### mixed model - Bowfin
 df.bowf<-subset(df.high,fSpecies=="Bowfin")
@@ -233,6 +138,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.bowf, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -241,7 +148,7 @@ p <- p + geom_line(data=new.bowf,
 #p <- p + geom_smooth(data=df.bowf,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_Bowfin_26June2025.png",
+png("Fishway_CumulProp_Bowfin_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -254,9 +161,14 @@ m1.brbull <- glmer(cbind(cumul.catch, Year.Sum - cumul.catch) ~ Week + (1 | fYea
                  family = binomial)
 summary(m1.brbull) ##
 r2(m1.brbull)
+m2.brbull <- glm(cbind(cumul.catch, Year.Sum - cumul.catch) ~ Week,
+               data = df.brbull,
+               family = binomial)
+summary(m2.brbull) ##
 
 new.brbull <- expand.grid(Week = unique(df.brbull$Week), fYear = unique(df.brbull$fYear))
 new.brbull$predicted_prob <- predict(m1.brbull, new.brbull, type = "response", re.form = NA) # use re.form = NULL if including random effects
+new.brbull$predicted_prob.2 <- predict(m2.brbull, new.brbull, type = "response", re.form = NA) # use re.form = NULL if including random effects
 
 p <- ggplot()
 p <- p + labs(y= "Cumulative Prop. Annual Total Catch", x = "Week",title="Brown Bullhead")
@@ -265,18 +177,26 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.brbull, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
 p <- p + geom_line(data=new.brbull, 
                    aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
+#p <- p + geom_line(data=new.brbull, 
+#                   aes(x = Week, y = predicted_prob.2),colour="darkorange",linewidth=2)
 #p <- p + geom_smooth(data=df.brbull,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_BrownBullhead_26June2025.png",
+png("Fishway_CumulProp_BrownBullhead_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
+
+
+
+
 
 #### mixed model - Channel Catfish
 df.chcat<-subset(df.high,fSpecies=="Channel Catfish")
@@ -285,9 +205,14 @@ m1.chcat <- glmer(cbind(cumul.catch, Year.Sum - cumul.catch) ~ Week + (1 | fYear
                    family = binomial)
 summary(m1.chcat) ##
 r2(m1.chcat)
+m2.chcat <- glm(cbind(cumul.catch, Year.Sum - cumul.catch) ~ Week,
+                 data = df.chcat,
+                 family = binomial)
+summary(m2.chcat) ##
 
 new.chcat <- expand.grid(Week = unique(df.chcat$Week), fYear = unique(df.chcat$fYear))
 new.chcat$predicted_prob <- predict(m1.chcat, new.chcat, type = "response", re.form = NA) # use re.form = NULL if including random effects
+new.chcat$predicted_prob.2 <- predict(m2.chcat, new.chcat, type = "response", re.form = NA) # use re.form = NULL if including random effects
 
 p <- ggplot()
 p <- p + labs(y= "Cumulative Prop. Annual Total Catch", x = "Week",title="Channel Catfish")
@@ -296,15 +221,19 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.chcat, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
 p <- p + geom_line(data=new.chcat, 
                    aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
+p <- p + geom_line(data=new.chcat, 
+                   aes(x = Week, y = predicted_prob.2),colour="darkorange",linewidth=2)
 #p <- p + geom_smooth(data=df.chcat,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_ChannelCatfish_26June2025.png",
+png("Fishway_CumulProp_ChannelCatfish_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -327,6 +256,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.ccarp, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -335,7 +266,7 @@ p <- p + geom_line(data=new.ccarp,
 #p <- p + geom_smooth(data=df.ccarp,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_CommonCarp_26June2025.png",
+png("Fishway_CumulProp_CommonCarp_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -359,6 +290,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.hybrids, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -367,7 +300,7 @@ p <- p + geom_line(data=new.hybrids,
 #p <- p + geom_smooth(data=df.hybrids,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_CommonCarpxGoldfish_26June2025.png",
+png("Fishway_CumulProp_CommonCarpxGoldfish_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -391,6 +324,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.fdrum, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -399,7 +334,7 @@ p <- p + geom_line(data=new.fdrum,
 #p <- p + geom_smooth(data=df.fdrum,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_FreshwaterDrum_26June2025.png",
+png("Fishway_CumulProp_FreshwaterDrum_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -422,6 +357,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.gshad, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -430,7 +367,7 @@ p <- p + geom_line(data=new.gshad,
 #p <- p + geom_smooth(data=df.gshad,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_GizzardShad_26June2025.png",
+png("Fishway_CumulProp_GizzardShad_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -453,6 +390,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.gfish, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -461,7 +400,7 @@ p <- p + geom_line(data=new.gfish,
 #p <- p + geom_smooth(data=df.gfish,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_Goldfish_26June2025.png",
+png("Fishway_CumulProp_Goldfish_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -484,6 +423,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.lbass, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -492,7 +433,7 @@ p <- p + geom_line(data=new.lbass,
 #p <- p + geom_smooth(data=df.lbass,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_LargemouthBass_26June2025.png",
+png("Fishway_CumulProp_LargemouthBass_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -517,6 +458,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.rtrout, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -525,7 +468,7 @@ p <- p + geom_line(data=new.rtrout,
 #p <- p + geom_smooth(data=df.rtrout,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_RainbowTrout_26June2025.png",
+png("Fishway_CumulProp_RainbowTrout_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -548,6 +491,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.rudd, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -556,7 +501,7 @@ p <- p + geom_line(data=new.rudd,
 #p <- p + geom_smooth(data=df.rudd,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_Rudd_26June2025.png",
+png("Fishway_CumulProp_Rudd_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -579,6 +524,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.wbass, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -587,7 +534,7 @@ p <- p + geom_line(data=new.wbass,
 #p <- p + geom_smooth(data=df.wbass,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_WhiteBass_26June2025.png",
+png("Fishway_CumulProp_WhiteBass_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -610,6 +557,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.wperch, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -618,7 +567,7 @@ p <- p + geom_line(data=new.wperch,
 #p <- p + geom_smooth(data=df.wperch,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_WhitePerch_26June2025.png",
+png("Fishway_CumulProp_WhitePerch_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -641,6 +590,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.wsuck, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -649,7 +600,7 @@ p <- p + geom_line(data=new.wsuck,
 #p <- p + geom_smooth(data=df.wsuck,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_WhiteSucker_26June2025.png",
+png("Fishway_CumulProp_WhiteSucker_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -672,6 +623,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
 p <- p + geom_jitter(data = df.yperch, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -680,20 +633,61 @@ p <- p + geom_line(data=new.yperch,
 #p <- p + geom_smooth(data=df.yperch,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_YellowPerch_26June2025.png",
+png("Fishway_CumulProp_YellowPerch_03July2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
 
 
 
+## Combo plot for select species
+p <- ggplot()
+p <- p + labs(y= "Cumulative Prop. Annual Total Catch", x = "Week")
+p <- p + theme_bw(base_size = 20) 
+p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth=2)
+p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
+p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
+p <- p + geom_line(data=new.pike, 
+                   aes(x = Week, y = predicted_prob),colour="brown",linewidth=2)
+p <- p + geom_line(data=new.wsuck, 
+                   aes(x = Week, y = predicted_prob),colour="darkgrey",linewidth=2)
+p <- p + geom_line(data=new.chcat, 
+                   aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
+p <- p + geom_line(data=new.bowf, 
+                   aes(x = Week, y = predicted_prob),colour="darkgreen",linewidth=2)
+p 
 
 
 
+## Combo plot for cold and coolwater species
+p <- ggplot()
+p <- p + labs(y= "Cumulative Prop. Annual Total Catch", x = "Week")
+p <- p + theme_bw(base_size = 20) 
+p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth=2)
+p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
+p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
+p <- p + geom_line(data=new.pike, 
+                   aes(x = Week, y = predicted_prob),colour="brown",linewidth=2)
+p <- p + geom_line(data=new.wsuck, 
+                   aes(x = Week, y = predicted_prob),colour="darkgrey",linewidth=2)
+p <- p + geom_line(data=new.yperch, 
+                   aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
+p <- p + geom_line(data=new.rudd, 
+                   aes(x = Week, y = predicted_prob),colour="darkgreen",linewidth=2)
+p <- p + geom_line(data=new.rtrout, 
+                   aes(x = Week, y = predicted_prob),colour="darkblue",linewidth=2)
+p 
 
-
-
-
+png("Fishway_ColdCoolSpecies_03July2025.png",
+    width = 2400, height = 2400,units="px",res=300)
+p
+dev.off()
 
 ## non cumulative plots and summaries
 ## calcualte mean weekly props by species.

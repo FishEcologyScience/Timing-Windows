@@ -40,10 +40,10 @@ time.wk.window <- function(data) {
 }
 
 ## import required datasets
-df.wk.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_Species_18June2025.rds")
-df.3 <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_BaseDataset_18June2025.rds")
-year.sum <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_YearlySum_by_Species_18June2025.rds")
-sum.species <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_SumBySpecies_18June2025.rds")
+df.wk.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
+df.3 <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_BaseDataset_03July2025.rds")
+year.sum <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_YearlySum_by_Species_03July2025.rds")
+sum.species <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_SumBySpecies_03July2025.rds")
 setwd("~/github/Timing-Windows/03_Output/")
 
 
@@ -93,7 +93,8 @@ df.c$logCatch<-log10(df.c$TotalCatch)
 df.c$fSpecies<-as.factor(df.c$Species)
 df.c$nTotalCatch<-as.numeric(df.c$TotalCatch)
 df.c$fYear<-as.factor(df.c$Year)
-#saveRDS(df.c, file = "TW_Fishway_Window_Catch_19June2025.rds")
+df.c<-subset(df.c,TotalCatch>=10)
+#saveRDS(df.c, file = "TW_Fishway_Window_Catch_03July2025.rds")
 
 
 plot(Window~logCatch,data=df.c)

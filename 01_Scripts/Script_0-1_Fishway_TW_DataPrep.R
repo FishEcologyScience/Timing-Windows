@@ -34,8 +34,10 @@ library(reshape2)
 #setwd("~/github/Timing-Windows/02_Data/")
 #setwd("~/04 - R Working Directory/03 - GitHub Desktop/Timing-Windows/02_Data")
 
-# base Fishway dataset - includes data up to 2022
-df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv")
+# base Fishway daagtaset - includes data up to 2022
+#df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv") ## PB
+df <- read.csv("~/github/Timing-Windows/02_Data/RBG_Barrier Data_1996-2022.csv") ## JM
+
 df$YMD <- dmy(df$Date) # make this into a date object
 df$Year <- year(df$YMD) # make this into a date object
 df$Day <- yday(df$YMD) # make this into a date object
@@ -76,17 +78,17 @@ p <- p + geom_vline(xintercept=121, linetype="dotdash", colour="red", linewidth=
 p <- p + geom_vline(xintercept=196, linetype="dotdash", colour="red", linewidth=2)
 p <- p + scale_y_discrete(limits=rev)
 #Add rectangles for timing windows
-p <- p + annotate("rect", xmin = 74, xmax = 151, ymin = -Inf, ymax = Inf, alpha=0.2, fill="blue")
-p <- p + annotate("rect", xmin = 121, xmax = 196, ymin = -Inf, ymax = Inf, alpha=0.2, fill="red") 
+p <- p + annotate("rect", xmin = 74, xmax = 151, ymin = -Inf, ymax = Inf, alpha=0.1, fill="blue")
+p <- p + annotate("rect", xmin = 121, xmax = 196, ymin = -Inf, ymax = Inf, alpha=0.1, fill="red") 
 #p <- p + geom_vline(xintercept=243, linetype="solid",colour="yellow", size=2)
 #p <- p + geom_vline(xintercept=50, linetype="solid",colour="yellow", size=2)
 p
 
 ## SAVE and EXPORT
-#png("Fishway_LiftDays_By_Year_23May2025.png", 
-#  width = 2400, height = 2400,units="px",res=300)
-#p
-#dev.off()
+png("Fishway_LiftDays_By_Year_03July2025.png", 
+  width = 2400, height = 2400,units="px",res=300)
+p
+dev.off()
 
 # summarize effor by year for each RAP
 effort.sum<-ddply(df, c("Year"), summarise, 
@@ -110,8 +112,9 @@ effort.sum$Pre_Warmwater_RAPDuration<-ifelse(effort.sum$Pre_Warmwater_RAPAvailab
 df.2<-merge(df,effort.sum,by=c("Year"),all=T)
 df.3<-df.2[!(df.2$Year==1996|df.2$Year==1999),] ## more breaks in data record for these years, so should be dropped. 
 df.3$fYear<-as.factor(df.3$Year)
+df.3 <- df.3[df.3$Species != "Black Bullhead", ] ## remove black bullhead records
 
-saveRDS(df.3, file = "TW_Fishway_BaseDataset_18June2025.rds")
+saveRDS(df.3, file = "TW_Fishway_BaseDataset_03July2025.rds")
 
 
 # total annual catch by species Table 
@@ -120,15 +123,15 @@ sum.by.species = cast(year.sum.species, Year~Species,value="Quantity")
 sum.by.species[is.na(sum.by.species)] = 0 
 head(sum.by.species)
 sum.species<-aggregate(Quantity~Species,data=year.sum.species,FUN=sum)
-sum.species$Rank<-ifelse(sum.species$Quantity<=50,"Low",
-                    ifelse(sum.species$Quantity>50&sum.species$Quantity<=1000,"Mod","High"))
+sum.species$Rank<-ifelse(sum.species$Quantity<=200,"Low",
+                    ifelse(sum.species$Quantity>200&sum.species$Quantity<=1000,"Mod","High"))
 sum.species$SpawnTemp<-ifelse(sum.species$Species=="Yellow Perch"|sum.species$Species=="Rainbow Trout"|
                                 sum.species$Species=="Northern Pike"|sum.species$Species=="Gizzard Shad"|sum.species$Species=="White Sucker","Cold","Warm")
 
 ## SAVE and EXPORT
 #write.csv(sum.species,file="Fishway_TotalCatch_by_Species_23May2025.csv") 
 #write.csv(sum.by.species,file="Fishway_TotalCatch_by_Year_by_Species_23May2025.csv") 
-saveRDS(sum.species, file = "TW_Fishway_SumBySpecies_18June2025.rds")
+saveRDS(sum.species, file = "TW_Fishway_SumBySpecies_03July2025.rds")
 
 ## Weekly summaries
 # Weekly dataset
@@ -162,6 +165,7 @@ df.wk.plot.split.warm<-subset(df.wk.plot.split,SpawnTemp=="Warm")
 
 # weekly means 
 # dropping years with little to no sampling prior to the start of the coolwater RAP
+df.wk.plot.split.warm<-subset(df.wk.plot.split.warm,Year.Sum>=10) ## removes years with <10 individuals
 df.wk.plot.mean.warm<-aggregate(Prop.Year~Species+Week,data=df.wk.plot.split.warm,FUN=mean)
 
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool,fYear!="1997")
@@ -174,6 +178,8 @@ df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2014")
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2015")
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2022")
 
+df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,Year.Sum>=10) ## removes years with <10 individuals
+
 df.wk.plot.2<-rbind(df.wk.plot.split.warm,df.wk.plot.split.cool.sub) # combine back base warm and modified cool datasets
 
 df.wk.plot.mean.cool<-aggregate(Prop.Year~Species+Week,data=df.wk.plot.split.cool.sub,FUN=mean)
@@ -183,15 +189,15 @@ df.wk.plot.mean$fSpecies<-as.factor(df.wk.plot.mean$Species)
 df.wk.plot.mean.2<-merge(df.wk.plot.mean,sum.species,by="Species",all=T)
 
 df.wk.plot.mean.2$fSpecies2 <- factor(df.wk.plot.mean.2$fSpecies, levels = c("Rainbow Trout", "Northern Pike", "White Sucker", "Yellow Perch", "Rudd", "Brown Bullhead",
-                                          "Black Crappie","Bowfin",'White Perch',"Goldfish","Largemouth Bass","Black Bullhead",
+                                          "Black Crappie","Bowfin",'White Perch',"Goldfish","Largemouth Bass",
                                           "Bigmouth Buffalo","White Bass","Common Carp","Common Carp x Goldfish","Channel Catfish",
                                           "Freshwater Drum","Gizzard Shad"))
 
-write.csv(df.wk.plot.mean.2,file="TW_Fishway_WeeklyMeans_by_RAP_18June2025.csv")
-saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_18June2025.rds")
+write.csv(df.wk.plot.mean.2,file="TW_Fishway_WeeklyMeans_by_RAP_03July2025.csv")
+saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_03July2025.rds")
 
-write.csv(df.wk.plot,file="TW_Fishway_WeeklyMeans_by_Species_18June2025.csv")
-saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_18June2025.rds")
+write.csv(df.wk.plot,file="TW_Fishway_WeeklyMeans_by_Species_03July2025.csv")
+saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
 
 
 
@@ -205,25 +211,25 @@ wk.prop.sum<-ddply(subset(df.wk.summary,Rank!="Low"), c("Week","Species"), summa
 wk.prop.by.species = cast(wk.prop.sum, Week~Species,value="Mean.Wk.Prop") 
 wk.prop.by.species[is.na(wk.prop.by.species)] = 0 
 head(wk.prop.by.species)
-saveRDS(df.wk.summary, file = "TW_Fishway_WeeklySummary_by_Species_18June2025.rds")
+saveRDS(df.wk.summary, file = "TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
 
 
 ## SAVE and EXPORT
-#write.csv(wk.prop.by.species,file="Fishway_MeanCumulativeCatch_by_Species_23May2025.csv")
+#write.csv(wk.prop.by.species,file="Fishway_MeanCumulativeCatch_by_Species_03July2025.csv")
 
 wk.prop.by.species.min = cast(wk.prop.sum, Week~Species,value="Min.Wk.Prop") 
 wk.prop.by.species.min[is.na(wk.prop.by.species.min)] = 0 
 head(wk.prop.by.species.min)
 
 ## SAVE and EXPORT
-#write.csv(wk.prop.by.species.min,file="Fishway_MinCumulativeCatch_by_Species_23May2025.csv")
+#write.csv(wk.prop.by.species.min,file="Fishway_MinCumulativeCatch_by_Species_03July2025.csv")
 
 wk.prop.by.species.max = cast(wk.prop.sum, Week~Species,value="Max.Wk.Prop") 
 wk.prop.by.species.max[is.na(wk.prop.by.species.max)] = 0 
 head(wk.prop.by.species.max)
 
 ## SAVE and EXPORT
-#write.csv(wk.prop.by.species.max,file="Fishway_MaxCumulativeCatch_by_Species_23May2025.csv")
+#write.csv(wk.prop.by.species.max,file="Fishway_MaxCumulativeCatch_by_Species_03July2025.csv")
 
 ##
 ## Risk? ##
@@ -262,8 +268,8 @@ df.cool.by.status.min[is.na(df.cool.by.status.min)] = 0
 df.cool.by.status.min
 
 ## SAVE and EXPORT
-#write.csv(df.cool.by.status,file="Fishway_MeanProp_in_CoolRAPPeriod_by_Species_23May2025.csv")
-#write.csv(df.cool.by.status.sd,file="Fishway_SDProp_in_CoolRAPPeriod_by_Species_22Aug2023.csv")
+#write.csv(df.cool.by.status,file="Fishway_MeanProp_in_CoolRAPPeriod_by_Species_03July2025.csv")
+#write.csv(df.cool.by.status.sd,file="Fishway_SDProp_in_CoolRAPPeriod_by_Species_03July2023.csv")
 
 
 df.cool.by.status.ranges<-ddply(df.wk.summary.cool, c("Species","CoolRAPStatus"), summarise, 
@@ -306,10 +312,10 @@ df.warm.by.status.ranges<-ddply(df.wk.summary.warm, c("Species","WarmRAPStatus")
                                 Records = length(SumProp)) ## 
 
 ## SAVE and EXPORT
-# write.csv(df.warm.by.status,file="Fishway_MeanProp_in_WarmRAPPeriod_by_Species_23May2025.csv")
-# write.csv(df.warm.by.status.sd,file="Fishway_SDProp_in_WarmRAPPeriod_by_Species_22Aug2023.csv")
+# write.csv(df.warm.by.status,file="Fishway_MeanProp_in_WarmRAPPeriod_by_Species_03July2025.csv")
+# write.csv(df.warm.by.status.sd,file="Fishway_SDProp_in_WarmRAPPeriod_by_Species_03July2023.csv")
 
 year.sum<-year.sum.species ## number at fishway per year
 year.sum<-plyr::rename(year.sum,c("Quantity"="TotalCatch"))
 
-saveRDS(year.sum, file = "TW_Fishway_YearlySum_by_Species_18June2025.rds")
+saveRDS(year.sum, file = "TW_Fishway_YearlySum_by_Species_03July2025.rds")
