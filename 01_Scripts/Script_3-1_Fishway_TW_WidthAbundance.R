@@ -39,6 +39,21 @@ time.wk.window <- function(data) {
   Tracking.Window ## Check for errors ##
 }
 
+time.window.95 <- function(data) {
+ Time.Min<-aggregate(YMD~Species+Year,data,min)
+ Time.Max<-aggregate(YMD~Species+Year,data,max)
+ Time.Min.025<-aggregate(Day~Species+Year,data,FUN=function(x) quantile(x, probs = 0.025))
+ Time.Max.975<-aggregate(Day~Species+Year,data,FUN=function(x) quantile(x, probs = 0.975))
+ Tracking.Window<-merge(Time.Min,Time.Max,by=c("Species","Year"))
+ Tracking.Window<-merge(Tracking.Window,Time.Min.025,by=c("Species","Year"))
+ Tracking.Window<-merge(Tracking.Window,Time.Max.975,by=c("Species","Year"))
+ Tracking.Window$Time.Diff<-Tracking.Window$YMD.y-Tracking.Window$YMD.x
+ Tracking.Window$Quantile.Diff<-round(Tracking.Window$Day.y)-round(Tracking.Window$Day.x)
+ Tracking.Window<-plyr::rename(Tracking.Window,c("YMD.x"="1st Detection","YMD.y"="Last Detection","Time.Diff"="Tracking Window",
+                                                 "Day.x"="LowerQuantile","Day.y"="UpperQuantile"))
+ Tracking.Window ## Check for errors ##
+}
+
 ## import required datasets
 df.wk.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
 df.3 <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_BaseDataset_03July2025.rds")
@@ -67,7 +82,7 @@ df.day<-aggregate(Quantity~Species+Year+Day+YMD,data=df.3,FUN=sum) ## summarize 
 df.a<-merge(df.day,sum.species,by=c("Species"))
 
 df.b<-subset(df.a,Rank=="High")
-df.b<-plyr::rename(df.b,c("Quantity.x"="Day.Sum","Quantity.y"="Year.Sum"))
+df.b<-plyr::rename(df.b,c("Quantity.x"="Day.Sum","Quantity.y"="Total.Sum"))
 
 df.year<-aggregate(Quantity~Species+Year,data=df.3,FUN=sum) ## summarize catch by year
 #
@@ -88,13 +103,17 @@ df.d.plot.a.01<-subset(df.d.plot.a,Prop.Year>=0.01) ## drop days with <1% catch
 df.d.plot.a.01.window<-data.frame(time.window(df.d.plot.a.01)) 
 df.d.plot.a.01.window$Window<-as.numeric(df.d.plot.a.01.window$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
 
-df.c<-merge(df.d.plot.a.01.window,year.sum,by=c("Species","Year"))
+df.d.plot.a.01.quantile<-data.frame(time.window.95(df.d.plot.a.01)) ## also includes quantiles
+df.d.plot.a.01.quantile$Window<-as.numeric(df.d.plot.a.01.quantile$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
+plot(df.d.plot.a.01.quantile$Window,df.d.plot.a.01.quantile$Quantile.Diff)
+
+df.c<-merge(df.d.plot.a.01.quantile,year.sum,by=c("Species","Year"))
 df.c$logCatch<-log10(df.c$TotalCatch)
 df.c$fSpecies<-as.factor(df.c$Species)
 df.c$nTotalCatch<-as.numeric(df.c$TotalCatch)
 df.c$fYear<-as.factor(df.c$Year)
 df.c<-subset(df.c,TotalCatch>=10)
-#saveRDS(df.c, file = "TW_Fishway_Window_Catch_03July2025.rds")
+saveRDS(df.c, file = "TW_Fishway_Window_Catch_04July2025.rds")
 
 
 plot(Window~logCatch,data=df.c)
@@ -273,4 +292,35 @@ ggplot(carp, aes(x = Day, y = Year, fill = Day.Sum)) +
 
 
 dens <- density(subset(carp,Year==2008)$Day.Sum)
+
+
+
+
+
+
+
+
+head(df.b)
+test<-subset(df.b,Species=="Bowfin")
+test.2<-subset(test,Year==2018)
+plot(Day.Sum~Day,data=test.2)
+
+
+q_low <- quantile(test.2$Day, 0.025)
+q_high <- quantile(test.2$Day, 0.975)
+delta<-q_high-q_low
+# Keep only values inside 95% range
+x_trimmed <- x_scaled[x_scaled >= q_low & x_scaled <= q_high]
+
+# Result
+summary(x_trimmed)
+
+
+
+testy<-data.frame(time.window.95(df.d.plot.a.01)) 
+df.d.plot.a.01.window$Window<-as.numeric(df.d.plot.a.01.window$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
+
+
+aggregate(Day~Species+Year,test.2,FUN=function(x) quantile(x, probs = 0.025))
+
 

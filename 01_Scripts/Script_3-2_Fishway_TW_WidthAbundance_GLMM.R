@@ -16,7 +16,8 @@ library(ggeffects)
 
 
 ## load data
-df <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_Window_Catch_03July2025.rds")
+df <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_Window_Catch_04July2025.rds") 
+#df <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_Window_Catch_80Quantile_04July2025.rds") ## 80%
 head(df) ## base dataset
 setwd("~/github/Timing-Windows/03_Output/")
 
@@ -63,4 +64,28 @@ png("Window_By_TotalCatch_GLMM_RandomSlopeIntercept_03July2025.png",
 p3
 dev.off()
 
+## using 95% confidnece intervals
+m3.1 <- lmer(Quantile.Diff ~ logCatch + (logCatch | fSpecies) ,data=df, REML=T) ## random slope and intercept by species 
+summary(m3.1) # p=0.165 ## most appropriate model? 
+plot(m3.1)
 
+## plot overall fixed effect
+pred.3 <- ggpredict(m3.1, terms = "logCatch") ## fixed effect
+p31<-ggplot(pred.3, aes(x = x, y = predicted)) + 
+ geom_line(color = "blue") +
+ geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = 0.2) +
+ labs(x = "log10(Annual Total Catch)", y = "95% Capture Duration (days)") +
+ theme_bw(base_size = 20) 
+p31
+
+df.3 <- df %>%mutate(predicted = predict(m3.1))
+p2<-ggplot(df.3, aes(x = logCatch, y = Window, color = fSpecies)) +
+ theme_bw(base_size = 20) + 
+ geom_point(alpha = 0.6) +
+ geom_line(aes(y = predicted, group = fSpecies), linewidth = 1) +
+ labs(y= "95% Capture Duration (days)", x = "log10(Annual Total Catch)",color="Species")
+p2
+
+ranef_data.3 <- ranef(m3.1, condVar = TRUE)
+p33<-dotplot(ranef_data.3, scales = list(x = list(relation = "free")))
+p33
