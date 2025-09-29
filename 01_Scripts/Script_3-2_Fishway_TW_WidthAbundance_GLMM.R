@@ -17,6 +17,8 @@ library(ggeffects)
 
 ## load data
 df <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_Window_Catch_04July2025.rds") 
+df <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_Window_Catch_All_16Sept2025.rds") 
+
 #df <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_Window_Catch_80Quantile_04July2025.rds") ## 80%
 head(df) ## base dataset
 setwd("~/github/Timing-Windows/03_Output/")
@@ -47,7 +49,7 @@ df <- df %>%mutate(predicted = predict(m1.2))
 p2<-ggplot(df, aes(x = logCatch, y = Window, color = fSpecies)) +
   theme_bw(base_size = 20) + 
   geom_point(alpha = 0.6) +
-  geom_line(aes(y = predicted, group = fSpecies), size = 1) +
+  geom_line(aes(y = predicted, group = fSpecies), linewidth = 1) +
   labs(y= "Capture Duration (days)", x = "log10(Annual Total Catch)",color="Species")
 p2
 png("Window_By_TotalCatch_GLMM_MainPlot_03July2025.png",

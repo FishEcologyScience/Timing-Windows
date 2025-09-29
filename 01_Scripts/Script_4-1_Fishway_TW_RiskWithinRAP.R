@@ -54,6 +54,10 @@ wk.cumul.by.species = cast(wk.cumul.prop, Week~Species,value="Mean.Wk.Prop")
 wk.cumul.by.species[is.na(wk.cumul.by.species)] = 0 
 #write.csv(wk.cumul.by.species,file="Mean_Weekly_Cumulative_PropCatch_03July025.csv")
 # Table 3 #
+wk.cumul.by.species.sd = cast(wk.cumul.prop, Week~Species,value="SD.Wk.Prop") 
+wk.cumul.by.species.sd[is.na(wk.cumul.by.species.sd)] = 0 
+#write.csv(wk.cumul.by.species.sd,file="Mean_Weekly_Cumulative_PropCatch_StdDeviation_17Sept2025.csv")
+
 
 ## break out by how common species are
 df.high<-subset(df.cumul.prop,Rank=="High")
