@@ -107,8 +107,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
-p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p <- p + geom_jitter(data = df.pike, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -119,7 +119,7 @@ p <- p + geom_line(data=new.pike,
 #p <- p + geom_smooth(data=df.pike,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_NorthernPike_03July2025.png",
+png("Fishway_CumulProp_NorthernPike_17Oct2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -142,8 +142,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
-p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p <- p + geom_jitter(data = df.bowf, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -152,7 +152,7 @@ p <- p + geom_line(data=new.bowf,
 #p <- p + geom_smooth(data=df.bowf,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_Bowfin_03July2025.png",
+png("Fishway_CumulProp_Bowfin_17Oct2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -225,19 +225,19 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
-p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p <- p + geom_jitter(data = df.chcat, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
 p <- p + geom_line(data=new.chcat, 
                    aes(x = Week, y = predicted_prob),colour="black",linewidth=2)
-p <- p + geom_line(data=new.chcat, 
-                   aes(x = Week, y = predicted_prob.2),colour="darkorange",linewidth=2)
+#p <- p + geom_line(data=new.chcat, 
+#                   aes(x = Week, y = predicted_prob.2),colour="darkorange",linewidth=2)
 #p <- p + geom_smooth(data=df.chcat,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_ChannelCatfish_03July2025.png",
+png("Fishway_CumulProp_ChannelCatfish_17Oct2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()
@@ -594,8 +594,8 @@ p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", linewidth
 p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", linewidth=2)
 p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", linewidth=2)
 p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", linewidth=2)
-p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#0072B2")
-p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.1, fill = "#D55E00")
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p <- p + geom_jitter(data = df.wsuck, 
                      aes(x = Week, y = cumul.prop), 
                      width = 0.2, height = 0.02, alpha = 0.3)
@@ -604,7 +604,7 @@ p <- p + geom_line(data=new.wsuck,
 #p <- p + geom_smooth(data=df.wsuck,aes(x=Week,y=cumul.prop))
 p 
 
-png("Fishway_CumulProp_WhiteSucker_03July2025.png",
+png("Fishway_CumulProp_WhiteSucker_17Oct2025.png",
     width = 2400, height = 2400,units="px",res=300)
 p
 dev.off()

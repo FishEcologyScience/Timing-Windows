@@ -16,9 +16,9 @@ library(reshape2)
 #library(glatos)
 
 #df.plot <- readRDS("02_Data/TW_Fishway_WeeklyMeans_by_RAP_18June2025.rds") #PB
-df.plot <- readRDS("02_Data/TW_Fishway_WeeklyMeans_by_RAP_03July2025.rds") ##JM
+df.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_RAP_17Oct2025.rds") ##JM
 
-#setwd("~/github/Timing-Windows/03_Output/")
+setwd("~/github/Timing-Windows/03_Output/")
 
 p <- ggplot(data=subset(df.plot,Rank!="Low"),aes(Week, fSpecies2 , fill=Prop.Year))
 p <- p +  geom_tile(color="grey50")
@@ -33,14 +33,14 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=1)
 p <- p +  labs(y= "Species", x = "Week", fill="Weekly 
 Prop. Total")
 p <- p + scale_y_discrete(limits=rev)
-p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha=0.1, fill="blue")
-p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha=0.1, fill="red") 
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 
 #p <- p +  ggtitle("Cootes Paradise Fishway - Brown Bullhead") 
 p
 
-png("Fishway_MeanWeeklyProp_by_Species_CommonFishes_OrderByMaxWeek_03July2025.png",
-    width = 2600, height = 1600,units="px",res=300)
+png("Fishway_MeanWeeklyProp_by_Species_CommonFishes_OrderByMaxWeek_17Oct2025.png",
+    width = 2600, height = 2000,units="px",res=300)
 p
 dev.off()
 

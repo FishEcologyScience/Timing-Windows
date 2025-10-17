@@ -36,7 +36,7 @@ library(reshape2)
 
 # base Fishway daagtaset - includes data up to 2022
 #df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv") ## PB
-df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv") ## JM
+df <- read.csv("~/github/Timing-Windows/02_Data/RBG_Barrier Data_1996-2022.csv") ## JM
 
 df$YMD <- dmy(df$Date) # make this into a date object
 df$Year <- year(df$YMD) # make this into a date object
@@ -114,7 +114,7 @@ df.3<-df.2[!(df.2$Year==1996|df.2$Year==1999),] ## more breaks in data record fo
 df.3$fYear<-as.factor(df.3$Year)
 df.3 <- df.3[df.3$Species != "Black Bullhead", ] ## remove black bullhead records
 
-saveRDS(df.3, file = "TW_Fishway_BaseDataset_03July2025.rds")
+#saveRDS(df.3, file = "TW_Fishway_BaseDataset_03July2025.rds")
 
 
 # total annual catch by species Table 
@@ -125,13 +125,13 @@ head(sum.by.species)
 sum.species<-aggregate(Quantity~Species,data=year.sum.species,FUN=sum)
 sum.species$Rank<-ifelse(sum.species$Quantity<=200,"Low",
                     ifelse(sum.species$Quantity>200&sum.species$Quantity<=1000,"Mod","High"))
-sum.species$SpawnTemp<-ifelse(sum.species$Species=="Yellow Perch"|sum.species$Species=="Rainbow Trout"|
-                                sum.species$Species=="Northern Pike"|sum.species$Species=="Gizzard Shad"|sum.species$Species=="White Sucker","Cold","Warm")
+sum.species$SpawnTemp<-ifelse(sum.species$Species=="Yellow Perch"|sum.species$Species=="Northern Pike"|sum.species$Species=="Gizzard Shad"|sum.species$Species=="White Sucker","Cool",
+                              ifelse(sum.species$Species=="Rainbow Trout","Cold","Warm"))
 
 ## SAVE and EXPORT
 #write.csv(sum.species,file="Fishway_TotalCatch_by_Species_23May2025.csv") 
 #write.csv(sum.by.species,file="Fishway_TotalCatch_by_Year_by_Species_23May2025.csv") 
-saveRDS(sum.species, file = "TW_Fishway_SumBySpecies_03July2025.rds")
+#saveRDS(sum.species, file = "TW_Fishway_SumBySpecies_03July2025.rds")
 
 ## Weekly summaries
 # Weekly dataset
@@ -160,7 +160,7 @@ df.wk.plot[is.na(df.wk.plot)] = 0 ## check if necessary (converts prop. years fr
 
 ## split out cool/warm fishes
 df.wk.plot.split<-merge(df.wk.plot,sum.species,by="Species",all=T)
-df.wk.plot.split.cool<-subset(df.wk.plot.split,SpawnTemp=="Cold")
+df.wk.plot.split.cool<-subset(df.wk.plot.split,SpawnTemp=="Cold"|SpawnTemp=="Cool")
 df.wk.plot.split.warm<-subset(df.wk.plot.split,SpawnTemp=="Warm")
 
 # weekly means 
@@ -194,8 +194,8 @@ df.wk.plot.mean.2$fSpecies2 <- factor(df.wk.plot.mean.2$fSpecies, levels = c("Ra
                                           "Freshwater Drum","Gizzard Shad"))
 
 # write.csv(df.wk.plot.mean.2,file="TW_Fishway_WeeklyMeans_by_RAP_03July2025.csv")
-# saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_03July2025.rds")
-# 
+ saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_17Oct2025.rds")
+## 
 # write.csv(df.wk.plot,file="TW_Fishway_WeeklyMeans_by_Species_03July2025.csv")
 # saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
 
