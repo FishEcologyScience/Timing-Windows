@@ -16,12 +16,13 @@ library(reshape2)
 #library(glatos)
 
 #df.plot <- readRDS("02_Data/TW_Fishway_WeeklyMeans_by_RAP_18June2025.rds") #PB
-df.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_RAP_03July2025.rds") ##JM
+df.plot <- readRDS("02_Data/TW_Fishway_WeeklyMeans_by_RAP_03July2025.rds") ##JM
 
 #setwd("~/github/Timing-Windows/03_Output/")
 
 p <- ggplot(data=subset(df.plot,Rank!="Low"),aes(Week, fSpecies2 , fill=Prop.Year))
 p <- p +  geom_tile(color="grey50")
+p <- p +  facet_grid(rows = vars(SpawnTemp), scales = "free_y", space = "free_y")  # separate panels per SpawnTemp
 p <- p +  theme_bw(base_size = 20) 
 p <- p +  theme(panel.grid=element_blank(),legend.title = element_text(size=10),legend.text = element_text(size=10))
 p <- p +  scale_fill_gradientn(colors=RColorBrewer::brewer.pal(9, "Greys")) # Greens / Reds /Greys
@@ -46,6 +47,7 @@ dev.off()
 
 p <- ggplot(data=subset(df.plot,Rank=="High"),aes(Week, fSpecies2 , fill=Prop.Year))
 p <- p +  geom_tile(color="grey50")
+p <- p +  facet_grid(rows = vars(SpawnTemp), scales = "free_y", space = "free_y")  # separate panels per SpawnTemp
 p <- p +  theme_bw(base_size = 20) 
 p <- p +  theme(panel.grid=element_blank(),legend.title = element_text(size=10),legend.text = element_text(size=10))
 p <- p +  scale_fill_gradientn(colors=RColorBrewer::brewer.pal(9, "Greys")) #Greens / Reds
@@ -71,6 +73,7 @@ dev.off()
 ## this plot no longer works b/c most of these species have <10 individuals/year
 p <- ggplot(data=subset(df.plot,Rank=="Low"),aes(Week, fSpecies , fill=Prop.Year))
 p <- p +  geom_tile(color="grey50")
+p <- p +  facet_grid(rows = vars(SpawnTemp), scales = "free_y", space = "free_y")  # separate panels per SpawnTemp
 p <- p +  theme_bw(base_size = 20) 
 p <- p +  theme(panel.grid=element_blank(),legend.title = element_text(size=10),legend.text = element_text(size=10))
 p <- p +  scale_fill_gradientn(colors=RColorBrewer::brewer.pal(9, "Greys"))

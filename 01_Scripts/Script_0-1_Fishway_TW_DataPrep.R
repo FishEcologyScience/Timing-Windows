@@ -36,7 +36,7 @@ library(reshape2)
 
 # base Fishway daagtaset - includes data up to 2022
 #df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv") ## PB
-df <- read.csv("~/github/Timing-Windows/02_Data/RBG_Barrier Data_1996-2022.csv") ## JM
+df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv") ## JM
 
 df$YMD <- dmy(df$Date) # make this into a date object
 df$Year <- year(df$YMD) # make this into a date object
@@ -193,11 +193,11 @@ df.wk.plot.mean.2$fSpecies2 <- factor(df.wk.plot.mean.2$fSpecies, levels = c("Ra
                                           "Bigmouth Buffalo","White Bass","Common Carp","Common Carp x Goldfish","Channel Catfish",
                                           "Freshwater Drum","Gizzard Shad"))
 
-write.csv(df.wk.plot.mean.2,file="TW_Fishway_WeeklyMeans_by_RAP_03July2025.csv")
-saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_03July2025.rds")
-
-write.csv(df.wk.plot,file="TW_Fishway_WeeklyMeans_by_Species_03July2025.csv")
-saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
+# write.csv(df.wk.plot.mean.2,file="TW_Fishway_WeeklyMeans_by_RAP_03July2025.csv")
+# saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_03July2025.rds")
+# 
+# write.csv(df.wk.plot,file="TW_Fishway_WeeklyMeans_by_Species_03July2025.csv")
+# saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
 
 
 
@@ -211,7 +211,7 @@ wk.prop.sum<-ddply(subset(df.wk.summary,Rank!="Low"), c("Week","Species"), summa
 wk.prop.by.species = cast(wk.prop.sum, Week~Species,value="Mean.Wk.Prop") 
 wk.prop.by.species[is.na(wk.prop.by.species)] = 0 
 head(wk.prop.by.species)
-saveRDS(df.wk.summary, file = "TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
+#saveRDS(df.wk.summary, file = "TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
 
 
 ## SAVE and EXPORT
@@ -318,4 +318,4 @@ df.warm.by.status.ranges<-ddply(df.wk.summary.warm, c("Species","WarmRAPStatus")
 year.sum<-year.sum.species ## number at fishway per year
 year.sum<-plyr::rename(year.sum,c("Quantity"="TotalCatch"))
 
-saveRDS(year.sum, file = "TW_Fishway_YearlySum_by_Species_03July2025.rds")
+#saveRDS(year.sum, file = "TW_Fishway_YearlySum_by_Species_03July2025.rds")
