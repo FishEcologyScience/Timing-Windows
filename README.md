@@ -1,22 +1,20 @@
 About The Project
 This project holds the R code in support of a manuscript:
 
-Title: Modelling complex spatial-temporal drivers of habitat suitability for an imperilled stream fish
+Title: Efficacy of exclusion periods for mitigating harm to freshwater fishes moving into a Great Lakes coastal wetland
+
 Authors:
-Paul A. Bzonek, D. Andrew R. Drake, Jacob W. Brownscombe
+Jonathan D. Midwood, Paul A. Bzonek, Morgan Piczak, Tys Theÿsmeÿer, Douglas C. Braun, Tyler D. Tunney, Sean M. Naman, Colin Lake, and  Jacob W. Brownscombe
 
 Publication:
-Bzonek, P.A., Drake, D.A.R. & Brownscombe, J.W. Modelling complex spatial–temporal drivers of habitat suitability for an imperilled stream fish. Hydrobiologia 851, 2279–2294 (2024). https://doi.org/10.1007/s10750-023-05455-5
+J.D. Midwood, P.A. Bzonek, M. Piczak, T. Theÿsmeÿer, D.C. Braun, T.D. Tunney, S.M. Naman, C. Lake, and  J.W. Brownscombe. Efficacy of exclusion periods for mitigating harm to freshwater fishes moving into a Great Lakes coastal wetlan Modelling complex spatial–temporal drivers of habitat suitability for an imperilled stream fish. In Submission to CJFAS.
 
 Abstract:
-Fish populations rely on complex environmental conditions involving physical, chemical, and biological factors. Understanding the factors that control population persistence and productivity is essential for species management. We assessed the distribution and associated habitat features of a species at risk in Canada, Silver Shiner (Notropis photogenis), within Sixteen Mile Creek, a tributary of Lake Ontario. Using random forest models, we quantified a range of ecological factors (n=25) to estimate habitat associations for sampled populations and life stages (juvenile, adult). A complex set of ecological factors were informative predictors of Silver Shiner distribution, including physical (stream morphology, water velocity, substrate type), chemical (conductivity), and biological (aquatic and riparian vegetation) conditions. Juveniles were less responsive to habitat conditions but exhibited high seasonal variability in occurrence. Adults were most common in stream sections with greater than 0.5 m depth and stream velocity less than 0.6 m/s, and areas without silt substrate. Broadly, the models predicted Silver Shiner distribution with 68%-92% accuracy in non-training data. Our findings describe the habitat conditions that Silver Shiner currently occupies in an urban drainage, which may serve as a point of reference for habitat protection and restoration. Further, predictive species distribution models can serve to identify habitat for further monitoring and restoration.
+FUnderstanding the timing of fish migrations and other life history processes can facilitate improved species protection by limiting harmful perturbations from human activities during critical periods. Exclusion periods (i.e., periods when harmful human activities are not permitted near or in-water; alternately timing windows or restricted activity periods) are among the most commonly applied measures used to mitigate harm to fish or fish habitat in aquatic ecosystems, but few studies have explored their efficacy. We used a 25 year dataset collected at an actively managed fish passage barrier in western Lake Ontario to assess the efficacy of coolwater (15 March – 31 May) and warmwater (01 May – 15 July) exclusion periods. Results indicate that the species evaluated are well protected when the coolwater and warmwater exclusion periods are both applied (i.e., no species with >30% of the spawning run unprotected). Individually, however, the exclusion periods are less effective (6/16 species with >30% unprotected). Some early spawning cold- and coolwater fishes (e.g., Rainbow Trout [Oncorhynchus mykiss] and Northern Pike [Esox lucius]), moved in prior to the start of the coolwater exclusion period and would be most at risk if works persisted into its first few weeks. There was considerable interannual variation in peak arrival timing for the 16 species assessed. The development of models that forecast arrival timing based on within-year conditions (e.g., seasonal water temperatures) is recommended as they could inform risk-based within-year decision making on whether works can continue into the exclusion period. Overall, results support the continued application of exclusion periods as an effective measure for mitigating harm to fish and fish habitat. 
 
 Usage:
-The data and R code used to investiage Silver Shiner habitat suitability are provided in this project. Copy or clone the files and you should be able to reproduce the analysis and figures seen within the manuscript.
-
-All scripts can be run from the intial script: Script0-0_UserInterface.R.
-
-An API key is needed to produce plots with a GoogleMaps basemap. Users would need to provide their own API key to get the basemaps.
+The data and R code used to prepare the Cootes Paradise Fishway dataset, summarize and derive plots and tables presented in the manuscrsipt, and implement relevant models are provides.
+Copy or clone the files and you should be able to reproduce the analysis and figures seen within the manuscript.
 
 Contact:
-paul.bzonek@dfo-mpo.gc.ca
+jon.midwood@dfo-mpo.gc.ca
