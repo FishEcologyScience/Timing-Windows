@@ -1,5 +1,6 @@
 rm(list = ls())
-# determine overlap between species observations (or habitat processes) and timing windows
+# Project objective: determine overlap between species observations (or habitat processes) and timing windows
+# This code preps the base datasets and provides summaries used to create tables
 # https://www.dfo-mpo.gc.ca/pnw-ppe/timing-periodes/on-eng.html
 # RAPS - southern region of Ontario
 # Spring Spawning
@@ -20,23 +21,17 @@ library(lubridate)
 library(reshape)
 library(data.table)
 library(lattice)
-#library(rgdal) depreciated
-#library(rgeos)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(reshape2)
-#library(glatos)
 
 #################
 ## Import Data ##
 #################
-#setwd("~/github/Timing-Windows/02_Data/")
-#setwd("~/04 - R Working Directory/03 - GitHub Desktop/Timing-Windows/02_Data")
+setwd("~/github/Timing-Windows/02_Data/")
 
-# base Fishway daagtaset - includes data up to 2022
-#df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv") ## PB
-df <- read.csv("~/github/Timing-Windows/02_Data/RBG_Barrier Data_1996-2022.csv") ## JM
+df <- read.csv("02_Data/RBG_Barrier Data_1996-2022.csv") ## read in base dataset
 
 df$YMD <- dmy(df$Date) # make this into a date object
 df$Year <- year(df$YMD) # make this into a date object
@@ -65,7 +60,7 @@ df.days$Day <- yday(df.days$Date) # make this into a date object
 df.days$fYear <- as.factor(df.days$Year)
 df.days$holder <- 1
 
-## effort plot - FIGURE 1
+## effort plot - SUPPLEMENTAL FIGURE S1
 p <- ggplot(df.days, aes(Day, fYear)) 
 p <- p + theme_bw(base_size = 20) 
 p <- p + theme(axis.title = element_text(face = "bold"),legend.position="none")  
@@ -77,11 +72,8 @@ p <- p + geom_vline(xintercept=151, linetype="dashed", colour="blue", linewidth=
 p <- p + geom_vline(xintercept=121, linetype="dotdash", colour="red", linewidth=2)
 p <- p + geom_vline(xintercept=196, linetype="dotdash", colour="red", linewidth=2)
 p <- p + scale_y_discrete(limits=rev)
-#Add rectangles for timing windows
 p <- p + annotate("rect", xmin = 74, xmax = 151, ymin = -Inf, ymax = Inf, alpha=0.1, fill="blue")
 p <- p + annotate("rect", xmin = 121, xmax = 196, ymin = -Inf, ymax = Inf, alpha=0.1, fill="red") 
-#p <- p + geom_vline(xintercept=243, linetype="solid",colour="yellow", size=2)
-#p <- p + geom_vline(xintercept=50, linetype="solid",colour="yellow", size=2)
 p
 
 ## SAVE and EXPORT
@@ -99,23 +91,18 @@ effort.sum$Pre_CoolWater_RAPAvailable<-ifelse(effort.sum$FirstLiftDay<=74,"Yes",
 effort.sum$Pre_CoolWater_RAPDuration<-ifelse(effort.sum$Pre_CoolWater_RAPAvailable=="Yes",effort.sum$FirstLiftDay-74,NA)
 effort.sum$Pre_Warmwater_RAPAvailable<-ifelse(effort.sum$FirstLiftDay<=121,"Yes","No")
 effort.sum$Pre_Warmwater_RAPDuration<-ifelse(effort.sum$Pre_Warmwater_RAPAvailable=="Yes",effort.sum$FirstLiftDay-121,NA)
-#effort.sum$CoolWater_RAPAvailable<-ifelse(effort.sum$FirstLiftDay<=151&effort.sum$FirstLiftDay<=74,"Yes","No")
-#effort.sum$CoolWater_RAPDuration<-ifelse(effort.sum$CoolWater_RAPAvailable=="No",effort.sum$FirstLiftDay-152,NA)
 
 ## SAVE and EXPORT
-#write.csv(effort.sum,file="Fishway_LiftEffort_By_Year_23May2025.csv") 
-
+#rite.csv(effort.sum,file="TW_Fishway_LiftEffort_By_Year.csv") 
 
 ## combine effort with base data
-
-
 df.2<-merge(df,effort.sum,by=c("Year"),all=T)
 df.3<-df.2[!(df.2$Year==1996|df.2$Year==1999),] ## more breaks in data record for these years, so should be dropped. 
 df.3$fYear<-as.factor(df.3$Year)
 df.3 <- df.3[df.3$Species != "Black Bullhead", ] ## remove black bullhead records
 
+## SAVE and EXPORT
 #saveRDS(df.3, file = "TW_Fishway_BaseDataset_03July2025.rds")
-
 
 # total annual catch by species Table 
 year.sum.species<-aggregate(Quantity~Year+Species,data=df.3,FUN=sum)
@@ -125,7 +112,7 @@ head(sum.by.species)
 sum.species<-aggregate(Quantity~Species,data=year.sum.species,FUN=sum)
 sum.species$Rank<-ifelse(sum.species$Quantity<=200,"Low",
                     ifelse(sum.species$Quantity>200&sum.species$Quantity<=1000,"Mod","High"))
-sum.species$SpawnTemp<-ifelse(sum.species$Species=="Yellow Perch"|sum.species$Species=="Northern Pike"|sum.species$Species=="Gizzard Shad"|sum.species$Species=="White Sucker","Cool",
+sum.species$SpawnTemp<-ifelse(sum.species$Species=="Yellow Perch"|sum.species$Species=="Northern Pike"|sum.species$Species=="Gizzard Shad"|sum.species$Species=="White Sucker"|sum.species$Species=="Rudd","Cool",
                               ifelse(sum.species$Species=="Rainbow Trout","Cold","Warm"))
 
 ## SAVE and EXPORT
@@ -160,14 +147,16 @@ df.wk.plot[is.na(df.wk.plot)] = 0 ## check if necessary (converts prop. years fr
 
 ## split out cool/warm fishes
 df.wk.plot.split<-merge(df.wk.plot,sum.species,by="Species",all=T)
-df.wk.plot.split.cool<-subset(df.wk.plot.split,SpawnTemp=="Cold"|SpawnTemp=="Cool")
+df.wk.plot.split.cool<-subset(df.wk.plot.split,SpawnTemp=="Cold"|SpawnTemp=="Cool") ## include Rainbow Trout
 df.wk.plot.split.warm<-subset(df.wk.plot.split,SpawnTemp=="Warm")
 
 # weekly means 
-# dropping years with little to no sampling prior to the start of the coolwater RAP
-df.wk.plot.split.warm<-subset(df.wk.plot.split.warm,Year.Sum>=10) ## removes years with <10 individuals
+# warmwater - remove years with <10 individuals
+df.wk.plot.split.warm<-subset(df.wk.plot.split.warm,Year.Sum>=10) 
 df.wk.plot.mean.warm<-aggregate(Prop.Year~Species+Week,data=df.wk.plot.split.warm,FUN=mean)
 
+# coolwater - remove years with <10 individuals
+# dropping years with little to no sampling prior to the start of the coolwater RAP
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool,fYear!="1997")
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2003")
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2004")
@@ -177,11 +166,10 @@ df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2008")
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2014")
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2015")
 df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,fYear!="2022")
+df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,Year.Sum>=10) 
 
-df.wk.plot.split.cool.sub<-subset(df.wk.plot.split.cool.sub,Year.Sum>=10) ## removes years with <10 individuals
-
-df.wk.plot.2<-rbind(df.wk.plot.split.warm,df.wk.plot.split.cool.sub) # combine back base warm and modified cool datasets
-
+# combine back base warm and modified cool datasets
+df.wk.plot.2<-rbind(df.wk.plot.split.warm,df.wk.plot.split.cool.sub) 
 df.wk.plot.mean.cool<-aggregate(Prop.Year~Species+Week,data=df.wk.plot.split.cool.sub,FUN=mean)
 
 df.wk.plot.mean<-rbind(df.wk.plot.mean.warm,df.wk.plot.mean.cool)
@@ -192,14 +180,11 @@ df.wk.plot.mean.2$fSpecies2 <- factor(df.wk.plot.mean.2$fSpecies, levels = c("Ra
                                           "Black Crappie","Bowfin",'White Perch',"Goldfish","Largemouth Bass",
                                           "Bigmouth Buffalo","White Bass","Common Carp","Common Carp x Goldfish","Channel Catfish",
                                           "Freshwater Drum","Gizzard Shad"))
-
+## SAVE and EXPORT
 # write.csv(df.wk.plot.mean.2,file="TW_Fishway_WeeklyMeans_by_RAP_03July2025.csv")
- saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_17Oct2025.rds")
-## 
+#saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_17Oct2025.rds")
 # write.csv(df.wk.plot,file="TW_Fishway_WeeklyMeans_by_Species_03July2025.csv")
 # saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
-
-
 
 ## mean weekly proportion of the population passing (risk-based look-up table?)
 df.wk.summary<-df.wk.plot.2
@@ -211,6 +196,7 @@ wk.prop.sum<-ddply(subset(df.wk.summary,Rank!="Low"), c("Week","Species"), summa
 wk.prop.by.species = cast(wk.prop.sum, Week~Species,value="Mean.Wk.Prop") 
 wk.prop.by.species[is.na(wk.prop.by.species)] = 0 
 head(wk.prop.by.species)
+## SAVE and EXPORT
 #saveRDS(df.wk.summary, file = "TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
 
 
@@ -231,8 +217,8 @@ head(wk.prop.by.species.max)
 ## SAVE and EXPORT
 #write.csv(wk.prop.by.species.max,file="Fishway_MaxCumulativeCatch_by_Species_03July2025.csv")
 
-##
-## Risk? ##
+
+## Risk - prop. potentially exposed by each week.
 df.wk.summary$CoolRAPStatus<-as.factor(ifelse(df.wk.summary$Week>=11&df.wk.summary$Week<=22,"RAP",
                                           ifelse(df.wk.summary$Week<11,"PreRAP","PostRAP")))
 df.wk.summary$WarmRAPStatus<-as.factor(ifelse(df.wk.summary$Week>=18&df.wk.summary$Week<=29,"RAP",
@@ -271,15 +257,12 @@ df.cool.by.status.min
 #write.csv(df.cool.by.status,file="Fishway_MeanProp_in_CoolRAPPeriod_by_Species_03July2025.csv")
 #write.csv(df.cool.by.status.sd,file="Fishway_SDProp_in_CoolRAPPeriod_by_Species_03July2023.csv")
 
-
 df.cool.by.status.ranges<-ddply(df.wk.summary.cool, c("Species","CoolRAPStatus"), summarise, 
                           MeanSumProp= mean(SumProp,na.rm=T),
                           SDSumProp = sd(SumProp,na.rm=T),
                           MaxSumProp = max(SumProp,na.rm=T),
                           MinSumProp = min(SumProp,na.rm=T),
                           Records = length(SumProp)) ## 
-
-
 
 df.wk.summary.warm<-ddply(na.omit(subset(df.wk.sum.effort,Rank!="Low")), c("Year","Species","Rank","WarmRAPStatus"), summarise, 
                           SumProp= sum(Prop.Year,na.rm=T),

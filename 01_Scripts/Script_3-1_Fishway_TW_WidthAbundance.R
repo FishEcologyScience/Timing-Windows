@@ -1,3 +1,4 @@
+## prepare dataset relationship between abundance and width (duration) of run
 rm(list = ls())
 ###################
 ## Load Packages ##
@@ -7,14 +8,11 @@ library(lubridate)
 library(reshape)
 library(data.table)
 library(lattice)
-#library(rgdal)
-#library(rgeos)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(reshape2)
 library(segmented)
-#library(hrbrthemes)
 library(viridis)
 library(ggridges)
 
@@ -60,8 +58,6 @@ df.3 <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_BaseDataset_03July20
 year.sum <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_YearlySum_by_Species_03July2025.rds")
 sum.species <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_SumBySpecies_03July2025.rds")
 setwd("~/github/Timing-Windows/03_Output/")
-
-
 
 ###############
 ## Timing window width and abundance
@@ -113,215 +109,7 @@ df.c$fSpecies<-as.factor(df.c$Species)
 df.c$nTotalCatch<-as.numeric(df.c$TotalCatch)
 df.c$fYear<-as.factor(df.c$Year)
 df.c.save<-subset(df.c,TotalCatch>=10)
-saveRDS(df.c.save, file = "TW_Fishway_Window_Catch_04July2025.rds")
-saveRDS(df.c, file = "TW_Fishway_Window_Catch_All_16Sept2025.rds")
 
-
-plot(Window~logCatch,data=df.c)
-lm1<-lm(Window~logCatch,data=df.c)
-#lm1<-glm(TotalCatch~Window*Species,data=df.c)
-abline(lm1)
-summary(lm1)
-my.seg <- segmented(lm1, 
-                    seg.Z = ~ logCatch, 
-                    psi = list(logCatch = c(1,2.5)))
-summary(my.seg)
-# get the breakpoints
-my.seg$psi
-# get the slopes
-slope(my.seg)
-# get the fitted data
-my.fitted <- fitted(my.seg)
-my.model <- data.frame(logCatch = df.c$logCatch, Window = my.fitted)
-
-# plot the fitted model
-ggplot(my.model, aes(x = logCatch, y = Window)) + geom_line()
-
-p <- ggplot(data=df.c,aes(x=logCatch,y=Window,color=Species))
-p <- p +  labs(y= "Capture Window (days)", x = "log10(Annual Total Catch)")
-p <- p + theme_bw(base_size = 20) 
-p <- p + geom_point()
-p <- p + xlim(0,5)
-p <- p + ylim(0,200)
-p <- p + geom_line(data = my.model, aes(x = logCatch, y = Window), colour = "tomato",lwd=2)
-p 
-
-
-
-
-
-
-
-# Calculate the mean and standard error
-l.model <- lm(Day.Sum ~ 1, subset(df.b,Species=="Bowfin"))
-plot(Day.Sum ~ Year, subset(df.b,Species=="Bowfin"))
-abline(l.model)
-# Calculate the confidence interval
-confint(l.model, level=0.95)
-plot_model(m1.2, type = "re")
-ranef_data.2 <- ranef(m1.2, condVar = TRUE)
-dotplot(ranef_data.2, scales = list(x = list(relation = "free")))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## plot relationships between total catch and window width
-df.b.window<-data.frame(time.window(df.b))
-df.b.window$Window<-as.numeric(df.b.window$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
-
-plot(Window~as.factor(Year),data=df.b.window)
-
-df.c<-merge(df.b.window,year.sum,by=c("Species","Year"))
-df.c$logCatch<-log10(df.c$TotalCatch)
-dotchart(df.c$TotalCatch)
-plot(Window~logCatch,data=df.c)
-lm1<-lm(Window~logCatch,data=df.c)
-#lm1<-glm(TotalCatch~Window*Species,data=df.c)
-abline(lm1)
-summary(lm1)
-
-#lm2poly <- lm(Window ~ poly(log(TotalCatch), 2), data = df.c)
-## https://rpubs.com/MarkusLoew/12164
-
-# have to provide estimates for breakpoints.
-# after looking a the data, 
-my.seg <- segmented(lm1, 
-                    seg.Z = ~ logCatch, 
-                    psi = list(logCatch = c(1,2.5)))
-
-# When not providing estimates for the breakpoints "psi = NA" can be used.
-# The number of breakpoints that will show up is not defined
-#my.seg <- segmented(my.lm, 
-#                    seg.Z = ~ DistanceMeters, 
-#                    psi = NA)
-
-# display the summary
-summary(my.seg)
-# get the breakpoints
-my.seg$psi
-# get the slopes
-slope(my.seg)
-# get the fitted data
-my.fitted <- fitted(my.seg)
-my.model <- data.frame(logCatch = df.c$logCatch, Window = my.fitted)
-
-# plot the fitted model
-ggplot(my.model, aes(x = logCatch, y = Window)) + geom_line()
-
-p <- ggplot(data=df.c,aes(x=logCatch,y=Window,color=Species))
-p <- p +  labs(y= "Capture Window (days)", x = "log10(Annual Total Catch)")
-p <- p + theme_bw(base_size = 20) 
-p <- p + geom_point()
-p <- p + xlim(0,5)
-p <- p + ylim(0,200)
-p <- p + geom_line(data = my.model, aes(x = logCatch, y = Window), colour = "tomato",lwd=2)
-p 
-
-
-plot(Window~logCatch,data=subset(df.c,Species=="Common Carp"))
-lm.carp<-lm(Window~logCatch,data=subset(df.c,Species=="Common Carp"))
-abline(lm.carp)
-summary(lm.carp)
-
-plot(Window~logCatch,data=subset(df.c,Species=="Gizzard Shad"))
-lm.giz<-lm(Window~logCatch,data=subset(df.c,Species=="Gizzard Shad"))
-abline(lm.giz)
-summary(lm.giz) #positive linear
-
-plot(Window~logCatch,data=subset(df.c,Species=="Brown Bullhead"))
-lm.bb<-lm(Window~logCatch,data=subset(df.c,Species=="Brown Bullhead"))
-abline(lm.bb)
-summary(lm.bb)
-
-plot(Window~logCatch,data=subset(df.c,Species=="White Sucker"))
-lm.ws<-lm(Window~logCatch,data=subset(df.c,Species=="White Sucker"))
-abline(lm.ws)
-summary(lm.ws)
-
-plot(Window~logCatch,data=subset(df.c,Species=="Goldfish"))
-lm.gf<-lm(Window~logCatch,data=subset(df.c,Species=="Goldfish"))
-abline(lm.gf)
-summary(lm.gf) #positive linear
-
-plot(Window~logCatch,data=subset(df.c,Species=="Northern Pike"))
-lm.pike<-lm(Window~logCatch,data=subset(df.c,Species=="Northern Pike"))
-abline(lm.pike)
-summary(lm.pike) #positive linear
-
-plot(Window~logCatch,data=subset(df.c,Species=="Yellow Perch"))
-lm.perch<-lm(Window~logCatch,data=subset(df.c,Species=="Yellow Perch"))
-abline(lm.perch)
-summary(lm.perch)
-
-
-
-
-
-
-
-carp<-subset(df.b,Species=="Common Carp")
-ggplot(data=carp, aes(x=Day, group=Day.Sum, fill=Day.Sum)) +
-  geom_density(adjust=1.5) +
-  theme_ipsum() +
-  facet_wrap(~Year) +
-  theme(
-    legend.position="none",
-    panel.spacing = unit(0.1, "lines"),
-    axis.ticks.x=element_blank()
-  )
-
-
-# Diamonds dataset is provided by R natively
-#head(diamonds)
-
-# basic example
-ggplot(carp, aes(x = Day, y = Year, fill = Day.Sum)) +
-  geom_density_ridges() +
-  theme_ridges() + 
-  theme(legend.position = "none")
-
-
-dens <- density(subset(carp,Year==2008)$Day.Sum)
-
-
-
-
-
-
-
-
-head(df.b)
-test<-subset(df.b,Species=="Bowfin")
-test.2<-subset(test,Year==2018)
-plot(Day.Sum~Day,data=test.2)
-
-
-q_low <- quantile(test.2$Day, 0.025)
-q_high <- quantile(test.2$Day, 0.975)
-delta<-q_high-q_low
-# Keep only values inside 95% range
-x_trimmed <- x_scaled[x_scaled >= q_low & x_scaled <= q_high]
-
-# Result
-summary(x_trimmed)
-
-
-
-testy<-data.frame(time.window.95(df.d.plot.a.01)) 
-df.d.plot.a.01.window$Window<-as.numeric(df.d.plot.a.01.window$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
-
-
-aggregate(Day~Species+Year,test.2,FUN=function(x) quantile(x, probs = 0.025))
-
-
+## SAVE and EXPORT
+#saveRDS(df.c.save, file = "TW_Fishway_Window_Catch_04July2025.rds")
+#saveRDS(df.c, file = "TW_Fishway_Window_Catch_All_16Sept2025.rds")

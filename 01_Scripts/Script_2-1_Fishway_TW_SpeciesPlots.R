@@ -1,3 +1,4 @@
+# create species-specific plots 
 rm(list = ls())
 ###################
 ## Load Packages ##
@@ -7,17 +8,14 @@ library(lubridate)
 library(reshape)
 library(data.table)
 library(lattice)
-#library(rgdal)
-#library(rgeos)
 library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(reshape2)
-#library(glatos)
-## df.wk.plot <- readRDS("02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds") ## PB path
-df.wk.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds") ## JM path
+df.wk.plot <- readRDS("02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds") 
 setwd("~/github/Timing-Windows/03_Output/")
 
+# FIGURE 2
 ## can swamp Prop.Year for Week.Sum to show the actual catch values
 ## Bowfin
 p <- ggplot(data=subset(df.wk.plot,Species=="Bowfin"),aes(Week, fYear , fill=Prop.Year))
@@ -33,7 +31,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Bowfin") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "D", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -57,7 +54,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Channel Catfish") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -81,7 +77,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Northern Pike") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -105,7 +100,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - White Sucker") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -116,7 +110,7 @@ p
 dev.off()
 
 
-### Supplemental Figures
+### Supplemental Figure S2
 ## Brown Bullhead
 p <- ggplot(data=subset(df.wk.plot,Species=="Bowfin"),aes(Week, fYear , fill=Prop.Year))
 p <- p +  geom_tile(color="grey50")
@@ -131,7 +125,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Brown Bullhead") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -140,8 +133,6 @@ png("Fishway_BrownBullhead_by_Year_17Sept2025.png",
     width = 2800, height = 2400,units="px",res=300)
 p
 dev.off()
-
-
 
 ## Common Carp
 p <- ggplot(data=subset(df.wk.plot,Species=="Common Carp"),aes(Week, fYear , fill=Prop.Year))
@@ -157,7 +148,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Common Carp") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -181,7 +171,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Freshwater Drum") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -205,7 +194,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Gizzard Shad") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -229,7 +217,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Goldfish") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -253,7 +240,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Largemouth Bass") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -262,8 +248,6 @@ png("Fishway_Largemouth Bass_by_Year_17Sept2025.png",
     width = 2800, height = 2400,units="px",res=300)
 p
 dev.off()
-
-
 
 ## Rainbow Trout
 p <- ggplot(data=subset(df.wk.plot,Species=="Rainbow Trout"),aes(Week, fYear , fill=Prop.Year))
@@ -279,7 +263,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Rainbow Trout") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -289,7 +272,7 @@ png("Fishway_RainbowTrout_by_Year_17Sept2025.png",
 p
 dev.off()
 
-## RRudd
+## Rudd
 p <- ggplot(data=subset(df.wk.plot,Species=="Rudd"),aes(Week, fYear , fill=Prop.Year))
 p <- p +  geom_tile(color="grey50")
 p <- p +  theme_bw(base_size = 20) 
@@ -303,7 +286,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Rudd") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -327,7 +309,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - White Bass") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -361,8 +342,6 @@ png("Fishway_WhitePerch_by_Year_17Sept2025.png",
 p
 dev.off()
 
-
-
 ## Yellow Perch
 p <- ggplot(data=subset(df.wk.plot,Species=="Yellow Perch"),aes(Week, fYear , fill=Prop.Year))
 p <- p +  geom_tile(color="grey50")
@@ -377,7 +356,6 @@ p <- p +  labs(y= "Year", x = "Week", fill="Weekly
 Prop. Total")
 p <- p +  ggtitle("Cootes Paradise Fishway - Yellow Perch") 
 p <- p + scale_y_discrete(limits=rev)
-#p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
@@ -387,32 +365,3 @@ png("Fishway_YellowPerch_by_Year_17Sept2025.png",
     width = 2800, height = 2400,units="px",res=300)
 p
 dev.off()
-
-
-#############################################
-## Species-specific based on overall catch ##
-#############################################
-## Shows the same thing as just hte raw catch fro each species...
-df.wk.overall.plot<-merge(df.wk.plot,sum.species,by=c("Species"),all=T) ## combine yearly
-df.wk.overall.plot<-plyr::rename(df.wk.overall.plot,c("Quantity"="Overall.Sum"))
-df.wk.overall.plot[is.na(df.wk.overall.plot)] = 0 
-
-df.wk.overall.plot$Prop.Overall<-df.wk.overall.plot$Week.Sum/df.wk.overall.plot$Overall.Sum
-
-## Common Carp
-p <- ggplot(data=subset(df.wk.overall.plot,Species=="Common Carp"),aes(Week, fYear , fill=Prop.Overall))
-p <- p +  geom_tile(color="grey50")
-p <- p +  theme_bw(base_size = 20) 
-p <- p +  theme(panel.grid=element_blank(),legend.title = element_text(size=10),legend.text = element_text(size=10))
-#p <- p +  scale_fill_gradientn(colors=RColorBrewer::brewer.pal(9, "Reds"))
-p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", size=2)
-p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", size=2)
-p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", size=2)
-p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
-p <- p +  labs(y= "Year", x = "Week", fill="Weekly 
-Prop. Total")
-p <- p +  ggtitle("Cootes Paradise Fishway - Common Carp") 
-p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
-p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
-p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
-p
