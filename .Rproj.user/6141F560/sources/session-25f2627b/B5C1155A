@@ -1,0 +1,26 @@
+{
+    "id": "B5C1155A",
+    "path": "~/github/Timing-Windows/01_Scripts/Script_3-1_Fishway_TW_WidthAbundance.R",
+    "project_path": "01_Scripts/Script_3-1_Fishway_TW_WidthAbundance.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1778873900158.0,
+    "source_on_save": false,
+    "relative_order": 5,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "31,1",
+        "scrollLine": "42"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1778876071,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1778876071512,
+    "read_only": false,
+    "read_only_alternatives": []
+}

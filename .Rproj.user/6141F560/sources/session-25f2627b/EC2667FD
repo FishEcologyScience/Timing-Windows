@@ -1,0 +1,26 @@
+{
+    "id": "EC2667FD",
+    "path": "~/github/Timing-Windows/01_Scripts/Script_0-1_Fishway_TW_DataPrep.R",
+    "project_path": "01_Scripts/Script_0-1_Fishway_TW_DataPrep.R",
+    "type": "r_source",
+    "hash": "2842244481",
+    "contents": "",
+    "dirty": false,
+    "created": 1778866090295.0,
+    "source_on_save": false,
+    "relative_order": 1,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "205,24",
+        "scrollLine": "188"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1778871435,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1778871435492,
+    "read_only": false,
+    "read_only_alternatives": []
+}

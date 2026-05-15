@@ -1,0 +1,26 @@
+{
+    "id": "5FA7F73D",
+    "path": "~/github/Timing-Windows/01_Scripts/Script_3-2_Fishway_TW_WidthAbundance_GLMM.R",
+    "project_path": "01_Scripts/Script_3-2_Fishway_TW_WidthAbundance_GLMM.R",
+    "type": "r_source",
+    "hash": "361690661",
+    "contents": "",
+    "dirty": false,
+    "created": 1778873930909.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "67,9",
+        "scrollLine": "29"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1778880369,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1778880369342,
+    "read_only": false,
+    "read_only_alternatives": []
+}
