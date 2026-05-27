@@ -77,10 +77,10 @@ p <- p + annotate("rect", xmin = 121, xmax = 196, ymin = -Inf, ymax = Inf, alpha
 p
 
 ## SAVE and EXPORT
-png("Fishway_LiftDays_By_Year_03July2025.png", 
-  width = 2400, height = 2400,units="px",res=300)
-p
-dev.off()
+#png("Fishway_LiftDays_By_Year_03July2025.png", 
+#  width = 2400, height = 2400,units="px",res=300)
+#p
+#dev.off()
 
 # summarize effor by year for each RAP
 effort.sum<-ddply(df, c("Year"), summarise, 
@@ -93,7 +93,7 @@ effort.sum$Pre_Warmwater_RAPAvailable<-ifelse(effort.sum$FirstLiftDay<=121,"Yes"
 effort.sum$Pre_Warmwater_RAPDuration<-ifelse(effort.sum$Pre_Warmwater_RAPAvailable=="Yes",effort.sum$FirstLiftDay-121,NA)
 
 ## SAVE and EXPORT
-#rite.csv(effort.sum,file="TW_Fishway_LiftEffort_By_Year.csv") 
+#write.csv(effort.sum,file="TW_Fishway_LiftEffort_By_Year.csv") 
 
 ## combine effort with base data
 df.2<-merge(df,effort.sum,by=c("Year"),all=T)
@@ -183,13 +183,13 @@ df.wk.plot.mean.2<-merge(df.wk.plot.mean,sum.species,by="Species",all=T)
 
 df.wk.plot.mean.2$fSpecies2 <- factor(df.wk.plot.mean.2$fSpecies, levels = c("Rainbow Trout", "Northern Pike", "White Sucker", "Yellow Perch", "Rudd", "Brown Bullhead",
                                           "Black Crappie","Bowfin",'White Perch',"Goldfish","Largemouth Bass",
-                                          "Bigmouth Buffalo","White Bass","Common Carp","Common Carp x Goldfish","Channel Catfish",
+                                          "Bigmouth Buffalo","Common Carp x Goldfish","White Bass","Common Carp","Channel Catfish",
                                           "Freshwater Drum","Gizzard Shad"))
 ## SAVE and EXPORT
 #write.csv(df.wk.plot.mean.2,file="TW_Fishway_WeeklyMeans_by_RAP_03July2025.csv")
 #saveRDS(df.wk.plot.mean.2, file = "TW_Fishway_WeeklyMeans_by_RAP_17Oct2025.rds")
 # write.csv(df.wk.plot,file="TW_Fishway_WeeklyMeans_by_Species_03July2025.csv")
-# saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
+#saveRDS(df.wk.plot, file = "TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
 
 ## mean weekly proportion of the population passing (risk-based look-up table?)
 df.wk.summary<-df.wk.plot.2
@@ -241,6 +241,10 @@ df.wk.summary.cool<-ddply(na.omit(subset(df.wk.sum.effort,Pre_CoolWater_RAPAvail
                  MinProp = min(Prop.Year,na.rm=T),
                  Records = length(Prop.Year)) ## 
 
+## SAVE and EXPORT
+#saveRDS(df.wk.summary.cool,file="Fishway_SumProportion_in_CoolRAPPeriod_by_Species_Year_27May2026.rds")
+
+
 df.cool<-aggregate(SumProp~Species+CoolRAPStatus,data=df.wk.summary.cool,FUN=mean)
 df.cool.by.status = cast(df.cool, Species~CoolRAPStatus,value="SumProp") 
 df.cool.by.status[is.na(df.cool.by.status)] = 0 
@@ -269,12 +273,15 @@ df.cool.by.status.ranges<-ddply(df.wk.summary.cool, c("Species","CoolRAPStatus")
                           MinSumProp = min(SumProp,na.rm=T),
                           Records = length(SumProp)) ## 
 
-df.wk.summary.warm<-ddply(na.omit(subset(df.wk.sum.effort,Rank!="Low")), c("Year","Species","Rank","WarmRAPStatus"), summarise, 
+df.wk.summary.warm<-ddply(subset(df.wk.sum.effort,Rank!="Low"), c("Year","Species","Rank","WarmRAPStatus"), summarise, 
                           SumProp= sum(Prop.Year,na.rm=T),
                           MeanProp= mean(Prop.Year,na.rm=T),
                           SDProp = sd(Prop.Year,na.rm=T),
                           MaxProp = max(Prop.Year,na.rm=T),
-                          MinProp = min(Prop.Year,na.rm=T)) ## 
+                          MinProp = min(Prop.Year,na.rm=T),
+                          Records = length(Prop.Year)) ## 
+## SAVE and EXPORT
+#saveRDS(df.wk.summary.warm,file="Fishway_SumProportion_in_WarmRAPPeriod_by_Species_Year_27May2026.rds")
 
 df.warm<-aggregate(SumProp~Species+WarmRAPStatus,data=df.wk.summary.warm,FUN=mean)
 df.warm.by.status = cast(df.warm, Species~WarmRAPStatus,value="SumProp") 
@@ -300,10 +307,12 @@ df.warm.by.status.ranges<-ddply(df.wk.summary.warm, c("Species","WarmRAPStatus")
                                 Records = length(SumProp)) ## 
 
 ## SAVE and EXPORT
-# write.csv(df.warm.by.status,file="Fishway_MeanProp_in_WarmRAPPeriod_by_Species_03July2025.csv")
+#write.csv(df.warm.by.status,file="Fishway_MeanProp_in_WarmRAPPeriod_by_Species_03July2025.csv")
 # write.csv(df.warm.by.status.sd,file="Fishway_SDProp_in_WarmRAPPeriod_by_Species_03July2023.csv")
 
 year.sum<-year.sum.species ## number at fishway per year
 year.sum<-plyr::rename(year.sum,c("Quantity"="TotalCatch"))
 
 #saveRDS(year.sum, file = "TW_Fishway_YearlySum_by_Species_03July2025.rds")
+
+

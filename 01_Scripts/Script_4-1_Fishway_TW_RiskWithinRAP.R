@@ -27,7 +27,8 @@ library(performance)
 #################
 ## Import Data ##
 #################
-df.wk.summary <- readRDS("~/Timing-Windows/02_Data/TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
+#df.wk.summary <- readRDS("~/Timing-Windows/02_Data/TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
+df.wk.summary <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklySummary_by_Species_03July2025.rds")
 setwd("~/Timing-Windows/03_Output/")
 
 ## remove years with zero catch
