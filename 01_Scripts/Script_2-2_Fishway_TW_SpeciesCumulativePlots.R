@@ -42,15 +42,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Bowfin") 
+p <- p +  ggtitle("Bowfin") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_Bowfin_by_Year_Cumulative_15May2026.png",
+p.bf<-p
+png("Fishway_Bowfin_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.bf
 dev.off()
 
 ## Channel Catfish
@@ -66,15 +66,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Channel Catfish") 
+p <- p +  ggtitle("Channel Catfish") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_ChannelCatfish_by_Year_Cumulative_15May2026.png",
+p.chan<-p
+png("Fishway_ChannelCatfish_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.chan
 dev.off()
 
 ## Northern Pike
@@ -90,15 +90,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Northern Pike") 
+p <- p +  ggtitle("Northern Pike") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_NorthernPike_by_Year_Cumulative_15May2026.png",
+p.np<-p
+png("Fishway_NorthernPike_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.np
 dev.off()
 
 ## White Sucker
@@ -114,15 +114,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - White Sucker") 
+p <- p +  ggtitle("White Sucker") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_WhiteSucker_by_Year_Cumulative_15May2026.png",
+p.ws<-p
+png("Fishway_WhiteSucker_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.ws
 dev.off()
 
 
@@ -140,15 +140,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Brown Bullhead") 
+p <- p +  ggtitle("Brown Bullhead") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_BrownBullhead_by_Year_Cumulative_15May2026.png",
+p.bb<-p
+png("Fishway_BrownBullhead_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.bb
 dev.off()
 
 ## Common Carp
@@ -164,15 +164,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Common Carp") 
+p <- p +  ggtitle("Common Carp") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_CommonCarp_by_Year_Cumulative_15May2026.png",
+p.cc<-p
+png("Fishway_CommonCarp_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.cc
 dev.off()
 
 ## Freshwater Drum
@@ -188,15 +188,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Freshwater Drum") 
+p <- p +  ggtitle("Freshwater Drum") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_FreshwaterDrum_by_Year_Cumulative_15May2026.png",
+p.fd<-p
+png("Fishway_FreshwaterDrum_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.fd
 dev.off()
 
 ## Gizzard Shad
@@ -212,15 +212,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Gizzard Shad") 
+p <- p +  ggtitle("Gizzard Shad") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_GizzardShad_by_Year_Cumulative_15May2026.png",
+p.gs<-p
+png("Fishway_GizzardShad_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.gs
 dev.off()
 
 ## Goldfish
@@ -236,15 +236,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Goldfish") 
+p <- p +  ggtitle("Goldfish") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_Goldfish_by_Year_Cumulative_15May2026.png",
+p.gf<-p
+png("Fishway_Goldfish_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.gf
 dev.off()
 
 ## Largemouth Bass
@@ -260,15 +260,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Largemouth Bass") 
+p <- p +  ggtitle("Largemouth Bass") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_Largemouth Bass_by_Year_Cumulative_15May2026.png",
+p.lb<-p
+png("Fishway_Largemouth Bass_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.lb
 dev.off()
 
 ## Rainbow Trout
@@ -284,15 +284,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Rainbow Trout") 
+p <- p +  ggtitle("Rainbow Trout") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_RainbowTrout_by_Year_Cumulative_15May2026.png",
+p.rt<-p
+png("Fishway_RainbowTrout_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.rt
 dev.off()
 
 ## Rudd
@@ -308,15 +308,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Rudd") 
+p <- p +  ggtitle("Rudd") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_Rudd_by_Year_Cumulative_15May2026.png",
+p.ru<-p
+png("Fishway_Rudd_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.ru
 dev.off()
 
 ## White Bass
@@ -332,15 +332,15 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - White Bass") 
+p <- p +  ggtitle("White Bass") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_WhiteBass_by_Year_Cumulative_15May2026.png",
+p.wb<-p
+png("Fishway_WhiteBass_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.wb
 dev.off()
 
 ## White Perch
@@ -356,16 +356,16 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - White Perch") 
+p <- p +  ggtitle("White Perch") 
 p <- p + scale_y_discrete(limits=rev)
 #p <- p + scale_fill_viridis(option = "B", values = scales::rescale(c(.5, 0.5, 1)))
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-
-png("Fishway_WhitePerch_by_Year_Cumulative_15May2026.png",
+p.wp<-p
+png("Fishway_WhitePerch_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.wp
 dev.off()
 
 ## Yellow Perch
@@ -381,14 +381,71 @@ p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
 p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
 Weekly 
 Proportion")
-p <- p +  ggtitle("Cootes Paradise Fishway - Yellow Perch") 
+p <- p +  ggtitle("Yellow Perch") 
 p <- p + scale_y_discrete(limits=rev)
 p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
 p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
 p
-p.YP
+p.yp<-p
 
-png("Fishway_YellowPerch_by_Year_Cumulative_15May2026.png",
+png("Fishway_YellowPerch_by_Year_Cumulative_27May2026.png",
     width = 2800, height = 2400,units="px",res=300)
-p
+p.yp
 dev.off()
+
+
+## Hybrid GF X Carp
+p <- ggplot(data=subset(df.cumul.prop,Species=="Common Carp x Goldfish"),aes(Week, fYear , fill=cumul.prop))
+p <- p +  geom_tile(color="grey50")
+p <- p +  theme_bw(base_size = 20) 
+p <- p +  theme(panel.grid=element_blank(),legend.title = element_text(size=10),legend.text = element_text(size=10))
+p <- p +  scale_fill_gradientn(colors = gray.colors(9, start = 1, end = 0.15))
+p <- p +  geom_vline(xintercept=10.5, linetype="dashed",colour="blue", size=2)
+p <- p +  geom_vline(xintercept=21.5, linetype="dashed",colour="blue", size=2)
+p <- p +  geom_vline(xintercept=17.5, linetype="dotdash",colour="red", size=2)
+p <- p +  geom_vline(xintercept=28.5, linetype="dotdash",colour="red", size=2)
+p <- p +  labs(y= "Year", x = "Week", fill="Cumulative
+Weekly 
+Proportion")
+p <- p +  ggtitle("Common Carp x Goldfish") 
+p <- p + scale_y_discrete(limits=rev)
+p <- p + annotate("rect", xmin = 10.5, xmax = 21.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#0072B2")
+p <- p + annotate("rect", xmin = 17.5, xmax = 28.5, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "#D55E00")
+p
+p.gfcarp<-p
+
+png("Fishway_Common CarpxGoldfish_by_Year_Cumulative_27May2026.png",
+    width = 2800, height = 2400,units="px",res=300)
+p.gfcarp
+dev.off()
+
+## combo plot
+library(patchwork)
+
+# Combine all 16 plots in a 4x4 grid
+combined <- (p.rt | p.np | p.ws | p.yp) /
+ (p.ru | p.bb | p.bf | p.wp) /
+ (p.gf | p.lb | p.wb | p.cc) /
+ (p.gfcarp | p.chan | p.fd | p.gs)
+
+png("Fishway_Combo_by_Year_Cumulative_27May2026.png",
+    width = 11200, height = 9600,units="px",res=300)
+combined
+dev.off()
+
+
+###########
+## testing relationship btw total catch and exclusion
+test<-subset(df.cumul.prop,Species=="Goldfish")
+result <- test %>%
+ group_by(Year) %>%
+ slice_min(abs(cumul.prop - 0.5), n = 1, with_ties = FALSE) %>%
+ ungroup()
+plot(Week~log(Year.Sum),data=result)
+abline(lm(Week~log(Year.Sum),data=result))
+
+
+result <- df.cumul.prop %>%
+ group_by(Species,Year) %>%
+ slice_min(abs(cumul.prop - 0.5), n = 1, with_ties = FALSE) %>%
+ ungroup()
