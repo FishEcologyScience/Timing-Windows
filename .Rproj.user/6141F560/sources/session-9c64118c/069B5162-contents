@@ -12,7 +12,7 @@ library(dplyr)
 library(ggplot2)
 library(tidyr)
 library(reshape2)
-df.wk.plot <- readRDS("02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds") 
+df.wk.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds") 
 setwd("~/github/Timing-Windows/03_Output/")
 
 ## cumulative sum by species x year

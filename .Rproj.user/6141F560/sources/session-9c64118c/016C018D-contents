@@ -1,0 +1,115 @@
+## prepare dataset relationship between abundance and width (duration) of run
+rm(list = ls())
+###################
+## Load Packages ##
+###################
+library(plyr)
+library(lubridate)
+library(reshape)
+library(data.table)
+library(lattice)
+library(dplyr)
+library(ggplot2)
+library(tidyr)
+library(reshape2)
+library(segmented)
+library(viridis)
+library(ggridges)
+
+###############
+## Functions ##
+###############
+time.window <- function(data) {
+  Time.Min<-aggregate(YMD~Species+Year,data,min)
+  Time.Max<-aggregate(YMD~Species+Year,data,max)
+  Tracking.Window<-merge(Time.Min,Time.Max,by=c("Species","Year"))
+  Tracking.Window$Time.Diff<-Tracking.Window$YMD.y-Tracking.Window$YMD.x
+  Tracking.Window<-plyr::rename(Tracking.Window,c("YMD.x"="1st Detection","YMD.y"="Last Detection","Time.Diff"="Tracking Window"))
+  Tracking.Window ## Check for errors ##
+}
+
+time.wk.window <- function(data) {
+  Time.Min<-aggregate(Week~Species+fYear,data,min)
+  Time.Max<-aggregate(Week~Species+fYear,data,max)
+  Tracking.Window<-merge(Time.Min,Time.Max,by=c("Species","fYear"))
+  Tracking.Window$Time.Diff<-Tracking.Window$Week.y-Tracking.Window$Week.x
+  Tracking.Window<-plyr::rename(Tracking.Window,c("Week.x"="1st Detection","Week.y"="Last Detection","Time.Diff"="Tracking Window"))
+  Tracking.Window ## Check for errors ##
+}
+
+time.window.95 <- function(data) {
+ Time.Min<-aggregate(YMD~Species+Year,data,min)
+ Time.Max<-aggregate(YMD~Species+Year,data,max)
+ Time.Min.025<-aggregate(Day~Species+Year,data,FUN=function(x) quantile(x, probs = 0.025))
+ Time.Max.975<-aggregate(Day~Species+Year,data,FUN=function(x) quantile(x, probs = 0.975))
+ Tracking.Window<-merge(Time.Min,Time.Max,by=c("Species","Year"))
+ Tracking.Window<-merge(Tracking.Window,Time.Min.025,by=c("Species","Year"))
+ Tracking.Window<-merge(Tracking.Window,Time.Max.975,by=c("Species","Year"))
+ Tracking.Window$Time.Diff<-Tracking.Window$YMD.y-Tracking.Window$YMD.x
+ Tracking.Window$Quantile.Diff<-round(Tracking.Window$Day.y)-round(Tracking.Window$Day.x)
+ Tracking.Window<-plyr::rename(Tracking.Window,c("YMD.x"="1st Detection","YMD.y"="Last Detection","Time.Diff"="Tracking Window",
+                                                 "Day.x"="LowerQuantile","Day.y"="UpperQuantile"))
+ Tracking.Window ## Check for errors ##
+}
+
+## import required datasets
+df.wk.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_Species_03July2025.rds")
+df.3 <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_BaseDataset_03July2025.rds")
+year.sum <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_YearlySum_by_Species_03July2025.rds")
+sum.species <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_SumBySpecies_03July2025.rds")
+setwd("~/github/Timing-Windows/03_Output/")
+
+###############
+## Timing window width and abundance
+################
+## daily summaries
+#Weekly dataset
+df.day.Years<-aggregate(Quantity~Year+Day+YMD,data=df.3,FUN=sum) ## total catch in a day?
+df.species<-c(unique(df.3$Species)) ## list of species
+df.day.Years.rep<-df.day.Years[rep(seq_len(nrow(df.day.Years)), length(df.species)), ] ## rep by # species
+df.species.rep<-rep(df.species,nrow(df.day.Years)) ## rep species by year
+df.day.Years.rep <-df.day.Years.rep[order(df.day.Years.rep$Year, df.day.Years.rep$Day),] ## order years
+df.day.base<-data.frame(df.day.Years.rep,df.species.rep) ## combine year and species
+df.day.base<-plyr::rename(df.day.base,c("df.species.rep"="Species"))
+df.day.base$Quantity=NULL ## create empty dataset with every day when sampling occurred
+
+df.day<-aggregate(Quantity~Species+Year+Day+YMD,data=df.3,FUN=sum) ## summarize catch by day-year
+
+df.a<-merge(df.day,sum.species,by=c("Species"))
+
+df.b<-subset(df.a,Rank=="High"|Rank=="Mod")
+df.b<-plyr::rename(df.b,c("Quantity.x"="Day.Sum","Quantity.y"="Total.Sum"))
+
+df.year<-aggregate(Quantity~Species+Year,data=df.3,FUN=sum) ## summarize catch by year
+#
+df.d.temp<-merge(df.day.base,df.day,by=c("Year","Day","Species","YMD"),all=T) ## combine dayly catch
+df.d.temp[is.na(df.d.temp)] = 0 
+#
+df.d.plot<-merge(df.d.temp,df.year,by=c("Species","Year"),all=T) ## combine yearly
+df.d.plot<-plyr::rename(df.d.plot,c("Quantity.x"="Day.Sum","Quantity.y"="Year.Sum"))
+df.d.plot[is.na(df.d.plot)] = 0 
+#
+df.d.plot$fYear<-as.factor(df.d.plot$Year)
+df.d.plot$Prop.Year<-df.d.plot$Day.Sum/df.d.plot$Year.Sum
+#
+df.d.plot.a<-merge(df.d.plot,sum.species,by=c("Species"))
+df.d.plot.a<-subset(df.d.plot.a,Rank=="High"|Rank=="Mod")
+df.d.plot.a.01<-subset(df.d.plot.a,Prop.Year>=0.01) ## drop days with <1% catch
+
+df.d.plot.a.01.window<-data.frame(time.window(df.d.plot.a.01)) 
+df.d.plot.a.01.window$Window<-as.numeric(df.d.plot.a.01.window$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
+
+df.d.plot.a.01.quantile<-data.frame(time.window.95(df.d.plot.a.01)) ## also includes quantiles
+df.d.plot.a.01.quantile$Window<-as.numeric(df.d.plot.a.01.quantile$Tracking.Window + 1) ## need to add 1 otherwise doesn't count the first day.
+plot(df.d.plot.a.01.quantile$Window,df.d.plot.a.01.quantile$Quantile.Diff)
+
+df.c<-merge(df.d.plot.a.01.quantile,year.sum,by=c("Species","Year"))
+df.c$logCatch<-log10(df.c$TotalCatch)
+df.c$fSpecies<-as.factor(df.c$Species)
+df.c$nTotalCatch<-as.numeric(df.c$TotalCatch)
+df.c$fYear<-as.factor(df.c$Year)
+df.c.save<-subset(df.c,TotalCatch>=10)
+
+## SAVE and EXPORT
+saveRDS(df.c.save, file = "TW_Fishway_Window_Catch_04July2025.rds")
+saveRDS(df.c, file = "TW_Fishway_Window_Catch_All_16Sept2025.rds")

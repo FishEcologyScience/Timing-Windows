@@ -20,17 +20,17 @@ library(ggridges)
 ## Import Data ##
 #################
 ## import base data to assign thermal guilds and define order
-df.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_RAP_17Oct2025.rds") 
+df.plot <- readRDS("~/github/Timing-Windows/02_Data/TW_Fishway_WeeklyMeans_by_RAP_16Years_29May2026.rds") 
 df.plot<-subset(df.plot,Rank!="Low")
 df.plot.base<-aggregate(Quantity~Species+fSpecies2+SpawnTemp,data=df.plot,FUN=mean)
 
 ## import base data for yearly proportion by EP
-df.cool <- readRDS("~/github/Timing-Windows/02_Data/Fishway_SumProportion_in_CoolRAPPeriod_by_Species_Year_27May2026.rds")
+df.cool <- readRDS("~/github/Timing-Windows/02_Data/Fishway_SumProportion_in_CoolRAPPeriod_by_Species_Year_29May2026.rds")
 df.cool <- df.cool[, c("Year", "Species","Rank","CoolRAPStatus","SumProp")]
 df.cool$RAP <- as.factor("Coolwater")
 df.cool$Period <- paste(df.cool$RAP,sep="-",df.cool$CoolRAPStatus)
 df.cool$CoolRAPStatus=NULL
-df.warm <- readRDS("~/github/Timing-Windows/02_Data/Fishway_SumProportion_in_WarmRAPPeriod_by_Species_Year_27May2026.rds")
+df.warm <- readRDS("~/github/Timing-Windows/02_Data/Fishway_SumProportion_in_WarmRAPPeriod_by_Species_Year_29May2026.rds")
 df.warm <- df.warm[, c("Year", "Species","Rank","WarmRAPStatus","SumProp")]
 df.warm$RAP <- as.factor("Warmwater")
 df.warm$Period <- paste(df.warm$RAP,sep="-",df.warm$WarmRAPStatus)
@@ -58,6 +58,8 @@ combo.plotting$fRAP <- factor(combo.plotting$RAP, levels = c("Coolwater", "Warmw
 
 for.plotting<-merge(combo.plotting,df.plot.base,by="Species")
 
+levels(for.plotting$fSpecies2)[levels(for.plotting$fSpecies2) == "Bowfin"] <- "Emerald Bowfin"
+
 ## FIGURE 1
 p <- ggplot(data=for.plotting,aes(SumProp, fSpecies2, shape = fRAP, color = fRAP))
 p <- p + annotate("rect", xmin = 0.0, xmax = 0.1, ymin = -Inf, ymax = Inf, alpha = 0.2, fill = "gray45")
@@ -78,7 +80,7 @@ color="     Exclusion
        Period")
 p
 
-png("Fishway_RiskOfExposure_AllYear_27May2026.png",
+png("Fishway_RiskOfExposure_AllYear_29May2026.png",
     width = 3000, height = 2800,units="px",res=300)
 p
 dev.off()
@@ -95,8 +97,16 @@ efficacy<-ddply(combo.plotting, c("RAP","Species"), summarise,
                   Mean.Effectiveness = mean(SumProp,na.rm=T),
                   SD.Effectiveness = sd(SumProp,na.rm=T),
                   Records = length(Species)) 
+## save for Table 2
 
 ### save for table
-
+test<-ddply(combo, c("RAP","Period","Species"), summarise, 
+                MeanProp = mean(SumProp,na.rm=T),
+                SDProp = sd(SumProp,na.rm=T),
+                Records = length(Species)) 
+test2<-ddply(combo, c("RAP","Species"), summarise, 
+            MeanProp = mean(SumProp,na.rm=T),
+            SDProp = sd(SumProp,na.rm=T),
+            Records = length(Species)) 
 
 
