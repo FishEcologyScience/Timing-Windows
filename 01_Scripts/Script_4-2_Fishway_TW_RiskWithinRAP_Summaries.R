@@ -92,7 +92,6 @@ combo.plotting$Efficacy<-ifelse(combo.plotting$SumProp<=0.1,"Highly Effective",
 
 table(combo.plotting$Species,combo.plotting$Efficacy,combo.plotting$RAP)
 
-
 efficacy<-ddply(combo.plotting, c("RAP","Species"), summarise, 
                   Mean.Effectiveness = mean(SumProp,na.rm=T),
                   SD.Effectiveness = sd(SumProp,na.rm=T),
@@ -108,5 +107,4 @@ test2<-ddply(combo, c("RAP","Species"), summarise,
             MeanProp = mean(SumProp,na.rm=T),
             SDProp = sd(SumProp,na.rm=T),
             Records = length(Species)) 
-
 
