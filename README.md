@@ -1,20 +1,90 @@
-About The Project
-This project holds the R code in support of a manuscript:
+# 2026_Midwood_Timing_Windows
 
-Title: Efficacy of exclusion periods for mitigating harm to freshwater fishes moving into a Great Lakes coastal wetland
+![Journal DOI](https://img.shields.io/badge/DOI-pending%20(in%20submission%20to%20CJFAS)-lightgrey)
+![Zenodo DOI](https://img.shields.io/badge/DOI-pending%20Zenodo%20archive-lightgrey)
 
-Authors:
-Jonathan D. Midwood, Paul A. Bzonek, Morgan Piczak, Tys Theÿsmeÿer, Douglas C. Braun, Tyler D. Tunney, Sean M. Naman, Colin Lake, and  Jacob W. Brownscombe
 
-Publication:
-J.D. Midwood, P.A. Bzonek, M. Piczak, T. Theÿsmeÿer, D.C. Braun, T.D. Tunney, S.M. Naman, C. Lake, and  J.W. Brownscombe. Efficacy of exclusion periods for mitigating harm to freshwater fishes moving into a Great Lakes coastal wetlan Modelling complex spatial–temporal drivers of habitat suitability for an imperilled stream fish. In Submission to CJFAS.
+## Overview
 
-Abstract:
-Understanding the timing of fish migrations and other life history processes can facilitate improved species protection by limiting harmful perturbations from human activities during critical periods. Exclusion periods (i.e., periods when harmful human activities are not permitted near or in-water; alternately timing windows or restricted activity periods) are among the most commonly applied measures used to mitigate harm to fish or fish habitat in aquatic ecosystems, but few studies have explored their efficacy. We used a 25 year dataset collected at an actively managed fish passage barrier in western Lake Ontario to assess the efficacy of coolwater (15 March – 31 May) and warmwater (01 May – 15 July) exclusion periods. Results indicate that the species evaluated are well protected when the coolwater and warmwater exclusion periods are both applied (i.e., no species with >30% of the spawning run unprotected). Individually, however, the exclusion periods are less effective (6/16 species with >30% unprotected). Some early spawning cold- and coolwater fishes (e.g., Rainbow Trout [Oncorhynchus mykiss] and Northern Pike [Esox lucius]), moved in prior to the start of the coolwater exclusion period and would be most at risk if works persisted into its first few weeks. There was considerable interannual variation in peak arrival timing for the 16 species assessed. The development of models that forecast arrival timing based on within-year conditions (e.g., seasonal water temperatures) is recommended as they could inform risk-based within-year decision making on whether works can continue into the exclusion period. Overall, results support the continued application of exclusion periods as an effective measure for mitigating harm to fish and fish habitat. 
+Code and data processing pipeline supporting the manuscript:
 
-Usage:
-The data and R code used to prepare the Cootes Paradise Fishway dataset, summarize and derive plots and tables presented in the manuscrsipt, and implement relevant models are provides.
-Copy or clone the files and you should be able to reproduce the analysis and figures seen within the manuscript.
+> Midwood JD, Bzonek PA, Piczak M, Theÿsmeÿer T, Braun DC, Tunney TD, Naman SM, Lake C, Brownscombe JW. In submission. Efficacy of exclusion periods for mitigating harm to freshwater fishes moving into a Great Lakes coastal wetland. Canadian Journal of Fisheries and Aquatic Sciences.
 
-Contact:
+Exclusion periods (also called timing windows or restricted activity periods) restrict
+harmful in-water and near-water activities during critical fish life-history windows.
+This study used a ~25-year dataset (1996-2022) collected at an actively managed fish
+passage barrier in western Lake Ontario (the Cootes Paradise Fishway) to assess the
+efficacy of coolwater (15 March - 31 May) and warmwater (01 May - 15 July) exclusion
+periods for 16 fish species. The two periods together protect all species well (no
+species with more than 30% of its spawning run left unprotected), but each period is
+less effective on its own (6 of 16 species with more than 30% unprotected). Early
+spring-spawning cold- and coolwater species (e.g., Rainbow Trout, Northern Pike) are
+most at risk if in-water works persist into the first few weeks of the coolwater
+period. Interannual variation in peak arrival timing was considerable across the 16
+species, and the manuscript recommends developing within-year forecast models (e.g.,
+from seasonal water temperature) to support risk-based decisions about extending works
+into an exclusion period.
+
+## Data Sources
+
+- ~68,000 fish-passage records (1996-2022) collected at the Cootes Paradise Fishway barrier, Royal Botanical
+  Gardens, western Lake Ontario.
+- Restricted Activity Period (RAP) / exclusion-period definitions applied per species, following DFO's
+  standard timing windows for southern Ontario:
+
+  | Season | Species / group | Window | Weeks |
+  |---|---|---|---|
+  | Spring | Walleye, Pike | 15 Mar - 31 May | 11-22 |
+  | Spring | Large/Smallmouth Bass | 01 May - 15 Jul | 18-29 |
+  | Spring | Other/unknown spawners | 15 Mar - 15 Jul | 11-29 |
+  | Fall | Lake Trout | 01 Oct - 31 May | 274-151 (DOY) |
+  | Fall | Lake Whitefish / Lake Herring | 15 Oct - 31 May | 288-151 (DOY) |
+  | Fall | Other/unknown spawners | 01 Oct - 31 May | 274-151 (DOY) |
+
+
+## Repository Structure
+
+| Folder | Contents |
+|---|---|
+| `01_Scripts/` | R scripts for data preparation, plotting, and modelling (see pipeline below) |
+| `02_Data/` | Raw base dataset plus derived weekly/yearly summary datasets |
+| `03_Output/` | Figures and summary tables; `03_Output/OldFigures/` holds superseded versions kept for reference |
+
+## Analysis Pipeline
+
+`Script_0-0_UserInterface.R` sources the core pipeline in order. 
+
+**Data preparation**
+- `Script_0-0_UserInterface.R` - console script; sources the pipeline scripts below in order
+- `Script_0-1_Fishway_TW_DataPrep.R` - cleans the raw barrier dataset and derives the weekly/yearly summary datasets and RAP-overlap tables used throughout
+
+**Community and species plots**
+- `Script_1-1_Fishway_TW_CommunityPlots.R` - community-level weekly catch-proportion heatmap by thermal guild
+- `Script_2-1_Fishway_TW_SpeciesPlots.R` - species-specific weekly catch-proportion heatmaps by year
+- `Script_2-2_Fishway_TW_SpeciesCumulativePlots.R` - cumulative catch-proportion plots by species and year *(run separately - not sourced by Script_0-0)*
+
+**Run width and abundance**
+- `Script_3-1_Fishway_TW_WidthAbundance.R` - helper functions computing run "width" (first/last detection window) by species and year
+- `Script_3-2_Fishway_TW_WidthAbundance_GLMM.R` - mixed model relating annual catch to run duration
+
+**Risk within exclusion periods**
+- `Script_4-1_Fishway_TW_RiskWithinRAP.R` - logistic models and plots for risk of exposure within the exclusion periods
+- `Script_4-2_Fishway_TW_RiskWithinRAP_Summaries.R` - summary risk figures and tables combining thermal-guild and RAP-proportion data *(run separately - not sourced by Script_0-0)*
+
+
+## Citation
+
+If you use this code or data, please cite the associated manuscript:
+
+> Midwood JD, Bzonek PA, Piczak M, Theÿsmeÿer T, Braun DC, Tunney TD, Naman SM, Lake C, Brownscombe JW. In submission. Efficacy of exclusion periods for mitigating harm to freshwater fishes moving into a Great Lakes coastal wetland. Canadian Journal of Fisheries and Aquatic Sciences.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE). Copyright (c) 2026 His
+Majesty the King in Right of Canada, as represented by the Minister of Fisheries and
+Oceans.
+
+## Author
+
+Jonathan D. Midwood (corresponding contact)
 jon.midwood@dfo-mpo.gc.ca
