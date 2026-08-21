@@ -32,14 +32,14 @@ into an exclusion period.
 - Restricted Activity Period (RAP) / exclusion-period definitions applied per species, following DFO's
   standard timing windows for southern Ontario:
 
-  | Season | Species / group | Window | Weeks |
+  | Season | Species / group | Window | Day Of Year |
   |---|---|---|---|
-  | Spring | Walleye, Pike | 15 Mar - 31 May | 11-22 |
-  | Spring | Large/Smallmouth Bass | 01 May - 15 Jul | 18-29 |
-  | Spring | Other/unknown spawners | 15 Mar - 15 Jul | 11-29 |
-  | Fall | Lake Trout | 01 Oct - 31 May | 274-151 (DOY) |
-  | Fall | Lake Whitefish / Lake Herring | 15 Oct - 31 May | 288-151 (DOY) |
-  | Fall | Other/unknown spawners | 01 Oct - 31 May | 274-151 (DOY) |
+  | Spring | Walleye, Pike | 15 Mar - 31 May | 74 - 151 |
+  | Spring | Large/Smallmouth Bass | 01 May - 15 Jul | 121 - 196 |
+  | Spring | Other/unknown spawners | 15 Mar - 15 Jul | 74 - 196 |
+  | Fall | Lake Trout | 01 Oct - 31 May | 274-151 |
+  | Fall | Lake Whitefish / Lake Herring | 15 Oct - 31 May | 288-151 |
+  | Fall | Other/unknown spawners | 01 Oct - 31 May | 274-151 |
 
 
 ## Repository Structure
