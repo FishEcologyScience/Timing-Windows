@@ -1,7 +1,7 @@
 # 2026_Midwood_Timing_Windows
 
 ![Journal DOI](https://img.shields.io/badge/DOI-pending%20(in%20submission%20to%20CJFAS)-lightgrey)
-![Zenodo DOI](https://img.shields.io/badge/DOI-pending%20Zenodo%20archive-lightgrey)
+[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22047872.svg)](https://doi.org/10.5281/zenodo.22047872)
 
 
 ## Overview
