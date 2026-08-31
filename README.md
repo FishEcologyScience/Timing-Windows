@@ -1,8 +1,7 @@
 # 2026_Midwood_Timing_Windows
 
-![Journal DOI](https://img.shields.io/badge/DOI-pending%20(in%20submission%20to%20CJFAS)-lightgrey)
-[![Zenodo DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22047872.svg)](https://doi.org/10.5281/zenodo.22047872)
-
+[![Journal DOI](https://img.shields.io/badge/Journal_DOI-10.1139%2Fcjfas--2025--0372-blue)](https://cdnsciencepub.com/doi/10.1139/cjfas-2025-0372)
+[![Zenodo DOI](https://img.shields.io/badge/Zenodo_DOI-10.5281%2Fzenodo.22047872-1682D4)](https://doi.org/10.5281/zenodo.22047872)
 
 ## Overview
 
